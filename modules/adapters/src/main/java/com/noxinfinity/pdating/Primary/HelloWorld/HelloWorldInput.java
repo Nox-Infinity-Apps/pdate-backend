@@ -1,5 +1,5 @@
 package com.noxinfinity.pdating.Primary.HelloWorld;
 
-public record HelloWorldDTO(String name){
+public record HelloWorldInput(String name){
 
 }

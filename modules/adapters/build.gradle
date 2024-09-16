@@ -20,20 +20,21 @@ repositories {
         url = uri("https://jitpack.io")
     }
 }
+dependencyManagement {
+    imports {
+        mavenBom("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release")
+    }
+}
+
 
 dependencies {
+    implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
+    testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
+
     implementation project(':modules:application')
 
-    implementation 'org.springframework.boot:spring-boot-starter-graphql'
-    // https://mvnrepository.com/artifact/com.graphql-java/graphql-spring-boot-starter
- implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:14.0.0'
+     implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:14.0.0'
 
   // testing facilities
   testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:14.0.0'
-}
-
-generateJava {
-    schemaPaths = ["${projectDir}/src/main/resources/graphql-client"]
-    packageName = 'com.noxinfinity.pdating.gcgv.codegen'
-    generateClient = true
 }

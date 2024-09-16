@@ -1,11 +1,27 @@
+buildscript {
+    dependencies{
+        classpath 'com.netflix.graphql.dgs.codegen:graphql-dgs-codegen-gradle:6.2.1'
+    }
+}
+
+
 plugins {
     id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
+    id "com.netflix.dgs.codegen" version '6.2.1'
     id 'java'
 }
 
 group = 'com.noxinfinity.pdating'
 version = '0.0.1-SNAPSHOT'
+
+
+dependencyManagement {
+    imports {
+        mavenBom("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:latest.release")
+    }
+}
+
 
 java {
     toolchain {
@@ -17,8 +33,12 @@ repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
     compileOnly("org.springframework.boot:spring-boot-devtools")
+    implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
+    testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
 
     implementation project(':modules:core')
     implementation project(':modules:application')
@@ -26,7 +46,6 @@ dependencies {
     implementation project(':modules:adapters')
 
     implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-graphql'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.kafka:spring-kafka'
@@ -35,7 +54,15 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-webflux'
-    testImplementation 'org.springframework.graphql:spring-graphql-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+
+generateJava{
+    schemaPaths = ["./src/main/resources/schema/"]
+    packageName = 'com.noxinfinity.pdate.graphql'
+    generateClient = true
+}
+
+apply plugin: 'com.netflix.dgs.codegen'
