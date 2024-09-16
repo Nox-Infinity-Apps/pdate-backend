@@ -1,0 +1,8 @@
+generates:
+  module/adapters/src/main/java/com.noxinfinity.pdating/Resolver.java:
+    plugins:
+      - java-resolvers
+    config:
+      package: com.noxinfinity.pdating
+schema:
+  - modules/app/src/main/resources/graphql/schema.graphqls

@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.netflix.dgs.codegen'
+}
+
+group = 'com.noxinfinity.pdating'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven{
+        url = uri("https://jitpack.io")
+    }
+}
+
+dependencies {
+    implementation project(':modules:application')
+
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    // https://mvnrepository.com/artifact/com.graphql-java/graphql-spring-boot-starter
+ implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:14.0.0'
+
+  // testing facilities
+  testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:14.0.0'
+}
+
+generateJava {
+    schemaPaths = ["${projectDir}/src/main/resources/graphql-client"]
+    packageName = 'com.noxinfinity.pdating.gcgv.codegen'
+    generateClient = true
+}

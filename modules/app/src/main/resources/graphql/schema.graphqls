@@ -1,0 +1,27 @@
+type Query {
+    helloWorld(name: String): String
+}
+
+type Mutation{
+    login(credentials: LoginPayload): LoginResult!
+}
+
+enum LoginResultEnum
+{
+    SUCCESS
+    FAILED
+}
+
+input LoginPayload{
+    username: String,
+    password: String,
+}
+
+type LoginSuccessData{
+    access_token: String!
+}
+
+type LoginResult{
+    result: LoginResultEnum,
+    data: LoginSuccessData
+}
