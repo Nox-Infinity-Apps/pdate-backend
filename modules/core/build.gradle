@@ -17,6 +17,10 @@ repositories {
     mavenCentral()
 }
 
+bootJar {
+    enabled = false
+}
+
 dependencies {
     implementation project(':modules:infrastructure')
 

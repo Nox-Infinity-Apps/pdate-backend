@@ -23,6 +23,10 @@ dependencyManagement {
     }
 }
 
+bootJar {
+    enabled = false
+}
+
 dependencies {
     compileOnly("org.springframework.boot:spring-boot-devtools")
     implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"

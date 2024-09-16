@@ -6,6 +6,11 @@ plugins {
     id "com.moowork.node" version "1.3.1"
 }
 
+bootJar {
+    mainClass.set('com.noxinfinity.pdating.GcgvApplication')
+    archiveFileName = 'pdate.jar'
+}
+
 group = 'com.noxinfinity.pdating'
 version = '0.0.1-SNAPSHOT'
 
@@ -18,6 +23,7 @@ java {
 repositories {
     mavenCentral()
 }
+
 
 dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -48,3 +54,5 @@ generateJava {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
