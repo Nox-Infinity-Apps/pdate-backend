@@ -1,7 +1,17 @@
 type Query {
     helloWorld(input: HelloWorldInput): String
+    byebyeWorld(isByebye: Boolean, message: String): String
 }
 
 input HelloWorldInput{
     name: String
+}
+
+type Mutation{
+    addToTestUser(name: String!): Response
+}
+
+type Response{
+    statusCode: Int!
+    statusMessage: String!
 }
