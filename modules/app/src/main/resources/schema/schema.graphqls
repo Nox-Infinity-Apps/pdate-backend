@@ -9,7 +9,7 @@ input HelloWorldInput{
 
 type Mutation{
     addToTestUser(name: String!): Response
-    login(request: LoginRequest!): Response_Login
+    login(loginRequest: LoginRequest!): Response_Login
 }
 
 type Response_Login {
@@ -17,7 +17,7 @@ type Response_Login {
     token: String!
 }
 
-type LoginRequest {
+input LoginRequest {
     username: String!
     password: String!
 }

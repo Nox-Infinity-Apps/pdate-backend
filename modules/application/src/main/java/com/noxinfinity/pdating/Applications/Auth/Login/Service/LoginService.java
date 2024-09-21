@@ -14,7 +14,7 @@ public class LoginService {
         this.authRepo = authRepo;
     }
     public LoginResponse login(LoginRequest request) {
-        if (authRepo.findUserAuthAndCheckPassword(request.username, request.password)) {
+        if (authRepo.findUserAuthAndCheckPassword(request.username(), request.password())) {
             return new LoginResponse(200,"token");
         }
         return new LoginResponse(401,"unauthorized");
