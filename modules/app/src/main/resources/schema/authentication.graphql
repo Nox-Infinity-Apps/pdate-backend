@@ -1,20 +1,8 @@
-schema {
-    query: Query
-}
-
-type Query {
-    helloWorld(input: HelloWorldInput): String
-    byebyeWorld(isByebye: Boolean, message: String): String
-}
-
-input HelloWorldInput{
-    name: String
-}
-
-type Mutation{
+extend type Mutation {
     addToTestUser(name: String!): Response
     login(loginRequest: LoginRequest!): Response_Login
 }
+
 
 type Response_Login {
     statusCode: Int!
