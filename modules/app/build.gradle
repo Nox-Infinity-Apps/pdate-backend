@@ -40,7 +40,6 @@ bootJar {
 
 
 dependencies {
-    compileOnly("org.springframework.boot:spring-boot-devtools")
     implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
     testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
 
@@ -56,7 +55,6 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
 
-    compileOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-webflux'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
