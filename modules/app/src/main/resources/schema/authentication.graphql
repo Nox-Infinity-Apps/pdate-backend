@@ -3,7 +3,6 @@ extend type Mutation {
     login(loginRequest: LoginRequest!): Response_Login
 }
 
-
 type Response_Login {
     statusCode: Int!
     token: String!

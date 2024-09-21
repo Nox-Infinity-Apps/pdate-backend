@@ -1,5 +1,6 @@
 version: "3.7"
 name: p_date
+
 services:
   api_service:
     build: ..
@@ -16,6 +17,44 @@ services:
 
     volumes:
       - .m2:/root/.m2
+
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - pdate
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data/:/root/redis
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=pdatecool
+      - REDIS_PORT=6379
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8001:8001'
+    networks:
+      - pdate
+    volumes:
+      - ./redisinsight:/db
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    networks:
+      - pdate
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./storage:/data
+    environment:
+      MINIO_ROOT_USER: pdatecool
+      MINIO_ROOT_PASSWORD: pdatecool
+    command: server --console-address ":9001" /data
 
   mysqldb:
     image: "mysql:8.0"

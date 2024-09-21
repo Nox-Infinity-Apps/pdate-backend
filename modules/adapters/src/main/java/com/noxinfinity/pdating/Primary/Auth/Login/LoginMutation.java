@@ -7,6 +7,7 @@ import com.noxinfinity.pdating.Applications.Auth.Login.Dto.LoginRequest;
 import com.noxinfinity.pdating.Applications.Auth.Login.Dto.LoginResponse;
 import com.noxinfinity.pdating.Applications.Auth.Login.Service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @DgsComponent
 public class LoginMutation {
@@ -18,6 +19,6 @@ public class LoginMutation {
     @DgsMutation
     public Response_Login login(@InputArgument LoginRequest loginRequest) {
         LoginResponse response = loginService.login(loginRequest);
-        return new Response_Login(response.statusCode(),response.token());
+        return new Response_Login(response.statusCode(),"as2313adasdahhhhighhjfghdgfsesd");
     }
 }
