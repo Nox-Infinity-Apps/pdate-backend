@@ -14,4 +14,13 @@ public class Auth {
     private Long userId;
     private String username;
     private String password;
+
+
+    public Auth(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }
