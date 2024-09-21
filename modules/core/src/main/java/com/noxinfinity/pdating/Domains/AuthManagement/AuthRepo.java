@@ -4,5 +4,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthRepo {
-    Auth findUserAuthAndCheckPassword(String username, String password);
+    Auth findByUsername(String username);
 }

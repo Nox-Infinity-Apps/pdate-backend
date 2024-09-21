@@ -8,11 +8,7 @@ import java.util.Objects;
 @Repository
 public class AuthRepoImpl implements AuthRepo {
     @Override
-    public Auth findUserAuthAndCheckPassword(String username, String password) {
-        //findAuth
-        if (Objects.equals(username, "admin") && Objects.equals(password, "123456")){
-            return new Auth("admin");
-        }
-        return null;
+    public Auth findByUsername(String username) {
+        return new Auth(username,"12345", null);
     }
 }

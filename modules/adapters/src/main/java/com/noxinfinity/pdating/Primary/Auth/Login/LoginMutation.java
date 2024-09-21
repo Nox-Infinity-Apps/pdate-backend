@@ -17,8 +17,8 @@ public class LoginMutation {
         this.loginService = loginService;
     }
     @DgsMutation
-    public Response_Login login(@InputArgument LoginRequest loginRequest) {
+    public ResponseLogin login(@InputArgument LoginRequest loginRequest) {
         LoginResponse response = loginService.login(loginRequest);
-        return new Response_Login(response.statusCode(),"as2313adasdahhhhighhjfghdgfsesd");
+        return new ResponseLogin(response.statusCode(),response.message(),response.token());
     }
 }
