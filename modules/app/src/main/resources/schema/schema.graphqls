@@ -1,3 +1,7 @@
+schema {
+    query: Query
+}
+
 type Query {
     helloWorld(input: HelloWorldInput): String
     byebyeWorld(isByebye: Boolean, message: String): String
