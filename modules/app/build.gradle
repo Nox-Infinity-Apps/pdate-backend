@@ -66,6 +66,7 @@ dependencies {
 generateJava{
     schemaPaths = ["./src/main/resources/schema/"]
     packageName = 'com.noxinfinity.pdate.graphql'
+    typeMapping = [Upload: "org.springframework.web.multipart.MultipartFile"]
     generateClient = true
 }
 

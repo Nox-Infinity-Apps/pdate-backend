@@ -1,0 +1,5 @@
+scalar Upload
+
+extend type Mutation  {
+    uploadScriptWithMultipartPOST(input: Upload!): Boolean
+}
