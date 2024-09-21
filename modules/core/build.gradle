@@ -22,14 +22,13 @@ bootJar {
 }
 
 dependencies {
-    implementation project(':modules:infrastructure')
-
      implementation 'org.springframework.boot:spring-boot-starter'
         implementation 'org.springframework.boot:spring-boot-starter-graphql'
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-websocket'
         implementation 'org.springframework.kafka:spring-kafka'
         runtimeOnly 'com.mysql:mysql-connector-j'
-
-
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }

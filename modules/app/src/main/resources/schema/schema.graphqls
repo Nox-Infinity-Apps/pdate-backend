@@ -9,6 +9,17 @@ input HelloWorldInput{
 
 type Mutation{
     addToTestUser(name: String!): Response
+    login(request: LoginRequest!): Response_Login
+}
+
+type Response_Login {
+    statusCode: Int!
+    token: String!
+}
+
+type LoginRequest {
+    username: String!
+    password: String!
 }
 
 type Response{
