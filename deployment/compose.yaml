@@ -20,6 +20,8 @@ services:
   redis:
     image: redis:latest
     restart: always
+    networks:
+      - pdate
     ports:
       - "6379:6379"
     volumes:
@@ -28,6 +30,15 @@ services:
     environment:
       - REDIS_PASSWORD=pdatecool
       - REDIS_PORT=6379
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8001:8001'
+    networks:
+      - pdate
+    volumes:
+      - ./redisinsight:/db
 
   minio:
     image: minio/minio
