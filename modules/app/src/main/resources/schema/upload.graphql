@@ -1,5 +1,6 @@
 scalar Upload
 
 extend type Mutation  {
-    uploadScriptWithMultipartPOST(input: Upload!): Boolean
+    uploadScriptWithMultipartPOST(input: Upload!): String!
+    uploadFileScriptWithMultipartPOST(input: Upload!): String!
 }

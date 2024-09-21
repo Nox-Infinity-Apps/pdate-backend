@@ -17,6 +17,21 @@ services:
     volumes:
       - .m2:/root/.m2
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    networks:
+      - pdate
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./storage:/data
+    environment:
+      MINIO_ROOT_USER: pdatecool
+      MINIO_ROOT_PASSWORD: pdatecool
+    command: server --console-address ":9001" /data
+
   mysqldb:
     image: "mysql:8.0"
     container_name: pdb
