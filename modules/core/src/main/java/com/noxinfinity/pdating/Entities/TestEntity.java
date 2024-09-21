@@ -1,4 +1,4 @@
-package com.noxinfinity.pdating.Domains.Entities;
+package com.noxinfinity.pdating.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
