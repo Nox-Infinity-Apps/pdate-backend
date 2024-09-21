@@ -3,6 +3,7 @@ package com.noxinfinity.pdating.Entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +28,11 @@ public class UserProfile {
     @Column(name="age", columnDefinition = "FLOAT DEFAULT 18", nullable = true)
     private int age;
 
+    @ManyToOne
+    @JoinColumn(name = "major_id")
+    private Majors majors;
 
-
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfilePics> profilePics;
 
 }
