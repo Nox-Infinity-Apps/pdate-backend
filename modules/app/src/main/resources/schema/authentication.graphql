@@ -6,7 +6,7 @@ extend type Mutation {
 type ResponseLogin {
     statusCode: Int!
     message: String!
-    token: String!
+    token: String
 }
 
 input LoginRequest {
