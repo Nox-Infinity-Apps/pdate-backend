@@ -39,12 +39,12 @@ public class LoginService {
             String token = jwtProvider.createToken(request.username(), customUserDetailsService.loadUserByUsername(request.username())
                     .getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
 
-            return new LoginResponse(HttpStatus.OK.value(), "Login successful", token);
+            return new LoginResponse(token);
 
         } catch (BadCredentialsException e) {
-            return new LoginResponse(HttpStatus.UNAUTHORIZED.value(), "Invalid username or password", null);
+            return new LoginResponse( null);
         } catch (Exception e) {
-            return new LoginResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred", null);
+            return new LoginResponse( null);
         }
     }
 }

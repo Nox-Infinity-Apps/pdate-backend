@@ -1,0 +1,8 @@
+type Response {
+    code: Int!
+    status: String!
+    body: Body!
+    message: String!
+}
+
+union Body = LoginResponse

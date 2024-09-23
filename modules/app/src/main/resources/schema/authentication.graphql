@@ -1,20 +1,14 @@
 extend type Mutation {
     addToTestUser(name: String!): Response
-    login(loginRequest: LoginRequest!): ResponseLogin
+    login(loginRequest: LoginRequest!): Response
 }
-
-type ResponseLogin {
-    statusCode: Int!
-    message: String!
-    token: String
-}
-
 input LoginRequest {
     username: String!
     password: String!
 }
 
-type Response{
-    statusCode: Int!
-    statusMessage: String!
+type LoginResponse {
+    token: String
 }
+
+
