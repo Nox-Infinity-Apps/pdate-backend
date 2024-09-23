@@ -10,4 +10,8 @@ public class AuthRepoImpl implements AuthRepo {
     public Auth findByUsername(String username) {
         return new Auth(username,"$2a$10$bahESyqLKseg.vjNZsoS1eHmJnv3iUt7mvsWHcfawX/H6ONHVB4pK", null);
     }
+    public Auth addNewAuth(Auth auth) {
+        //saveDB
+        return auth;
+    }
 }

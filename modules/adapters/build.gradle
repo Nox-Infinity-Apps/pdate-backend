@@ -41,6 +41,7 @@ dependencies {
     implementation project(':modules:application')
 
      implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:14.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
 
   // testing facilities
   testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:14.0.0'

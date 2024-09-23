@@ -6,8 +6,8 @@ import com.netflix.graphql.dgs.InputArgument;
 import com.noxinfinity.pdating.Applications.Auth.Login.Dto.LoginRequest;
 import com.noxinfinity.pdating.Applications.Auth.Login.Dto.LoginResponse;
 import com.noxinfinity.pdating.Applications.Auth.Login.Service.LoginService;
+import com.noxinfinity.pdating.Primary.Base.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @DgsComponent
 public class LoginMutation {
@@ -17,8 +17,8 @@ public class LoginMutation {
         this.loginService = loginService;
     }
     @DgsMutation
-    public ResponseLogin login(@InputArgument LoginRequest loginRequest) {
+    public Response<Object> login(@InputArgument LoginRequest loginRequest) {
         LoginResponse response = loginService.login(loginRequest);
-        return new ResponseLogin(response.statusCode(),response.message(),response.token());
+        return new Response<>(200,"success",response,"login successful");
     }
 }
