@@ -5,4 +5,4 @@ type Response {
     message: String!
 }
 
-union Body = LoginResponse
+union Body = LoginResponseData | RegisterResponseData

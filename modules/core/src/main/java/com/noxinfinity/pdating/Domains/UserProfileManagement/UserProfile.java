@@ -1,6 +1,10 @@
-package com.noxinfinity.pdating.Entities;
+package com.noxinfinity.pdating.Domains.UserProfileManagement;
 
+import com.noxinfinity.pdating.Domains.UserManagement.Users;
 import com.noxinfinity.pdating.Entities.Enums.Gender;
+import com.noxinfinity.pdating.Entities.Favorites;
+import com.noxinfinity.pdating.Entities.Majors;
+import com.noxinfinity.pdating.Entities.ProfilePics;
 import jakarta.persistence.*;
 import lombok.Getter;
 

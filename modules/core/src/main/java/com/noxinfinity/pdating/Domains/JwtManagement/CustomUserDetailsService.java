@@ -1,5 +1,6 @@
 package com.noxinfinity.pdating.Domains.JwtManagement;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +12,7 @@ import com.noxinfinity.pdating.Domains.AuthManagement.Auth;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final AuthRepo authRepo;
-
+    @Autowired
     public CustomUserDetailsService(AuthRepo authRepo) {
         this.authRepo = authRepo;
     }

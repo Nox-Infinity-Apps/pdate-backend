@@ -2,16 +2,18 @@ package com.noxinfinity.pdating.Repository;
 
 import com.noxinfinity.pdating.Domains.AuthManagement.Auth;
 import com.noxinfinity.pdating.Domains.AuthManagement.AuthRepo;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
 @Repository
-public class AuthRepoImpl implements AuthRepo {
-    @Override
-    public Auth findByUsername(String username) {
-        return new Auth(username,"$2a$10$bahESyqLKseg.vjNZsoS1eHmJnv3iUt7mvsWHcfawX/H6ONHVB4pK", null);
-    }
-    public Auth addNewAuth(Auth auth) {
-        //saveDB
-        return auth;
-    }
+public class AuthRepoImpl {
+
 }

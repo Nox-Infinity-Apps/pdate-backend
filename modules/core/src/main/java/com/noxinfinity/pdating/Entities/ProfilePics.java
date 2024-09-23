@@ -1,5 +1,6 @@
 package com.noxinfinity.pdating.Entities;
 
+import com.noxinfinity.pdating.Domains.UserProfileManagement.UserProfile;
 import jakarta.persistence.*;
 import lombok.Getter;
 

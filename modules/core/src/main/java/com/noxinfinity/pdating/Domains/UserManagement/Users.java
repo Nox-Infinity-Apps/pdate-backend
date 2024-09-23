@@ -1,10 +1,17 @@
-package com.noxinfinity.pdating.Entities;
+package com.noxinfinity.pdating.Domains.UserManagement;
 
+import com.noxinfinity.pdating.Domains.AuthManagement.Auth;
+import com.noxinfinity.pdating.Domains.UserProfileManagement.UserProfile;
+import com.noxinfinity.pdating.Entities.Conversations;
+import com.noxinfinity.pdating.Entities.Messages;
+import com.noxinfinity.pdating.Entities.UserBlock;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.List;
@@ -13,11 +20,15 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Users {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "user_id")
     private UUID userId;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Auth auth;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -53,4 +64,5 @@ public class Users {
     protected void onUpdate() {
         updatedAt = new Date();
     }
+
 }

@@ -1,20 +1,31 @@
 package com.noxinfinity.pdating.Domains.AuthManagement;
 
+import com.noxinfinity.pdating.Domains.UserManagement.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "auth")
+@Accessors(chain = true)
 @Getter
+@Setter
 public class Auth implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "user_id")
+    private UUID userId;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private Users user;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -23,8 +34,8 @@ public class Auth implements UserDetails {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-//    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-//    @Column(name = "role")
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
     private List<String> roles;
 
 

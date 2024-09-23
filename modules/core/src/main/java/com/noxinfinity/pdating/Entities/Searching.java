@@ -1,5 +1,6 @@
 package com.noxinfinity.pdating.Entities;
 
+import com.noxinfinity.pdating.Domains.UserManagement.Users;
 import com.noxinfinity.pdating.Entities.Enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
