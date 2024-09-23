@@ -40,7 +40,7 @@ public class Users {
     @OneToMany(mappedBy = "blockedUser", cascade = CascadeType.ALL)
     private List<UserBlock> usersWhoBlockedMe;
 
-    @OneToMany(mappedBy = "sent_message", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Messages> userSentMessage;
 
     @PrePersist

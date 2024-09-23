@@ -4,8 +4,6 @@ import com.noxinfinity.pdating.Entities.Enums.Conversation_Type;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +29,6 @@ public class Conversations {
     )
     private List<Users> usersInConversation;
 
-    @OneToMany(mappedBy = "messages_in_conversation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Messages> messagesInConversation;
 }
