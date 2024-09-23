@@ -4,18 +4,21 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.Date;
-import java.util.UUID;
 
-@Entity
 @Getter
-public class Users {
+@Entity
+public class UserMatched {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(name = "user_id")
-    private UUID userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserProfile userProfile;
+    @ManyToOne
+    @JoinColumn(name = "user", nullable = false)
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name = "matched_user", nullable = false)
+    private Users matchedUser;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)

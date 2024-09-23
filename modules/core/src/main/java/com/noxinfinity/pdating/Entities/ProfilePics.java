@@ -8,6 +8,7 @@ import lombok.Getter;
 public class ProfilePics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column()
     private Long id;
 
     private String url;
@@ -15,6 +16,4 @@ public class ProfilePics {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserProfile userProfile;
-
-
 }
