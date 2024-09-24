@@ -2,6 +2,7 @@ extend type Mutation {
     addToTestUser(name: String!): Response
     login(loginRequest: LoginRequest!): Response
     register(registerRequest: RegisterRequest!): Response
+    changePassword(changePasswordRequest: ChangePasswordRequest!): Response
 }
 input LoginRequest {
     username: String!
@@ -12,11 +13,20 @@ input RegisterRequest {
     username: String!
     password: String!
 }
+
+input ChangePasswordRequest {
+    oldPassword: String!
+    newPassword: String!
+}
+
 type LoginResponseData {
     token: String
 }
 
 type RegisterResponseData {
+    data: String
+}
+type ChangePasswordResponseData {
     data: String
 }
 

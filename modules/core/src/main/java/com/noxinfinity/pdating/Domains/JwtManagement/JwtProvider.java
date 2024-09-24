@@ -34,9 +34,10 @@ public class JwtProvider {
         this.signingKey = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public String createToken(String username, List<String> roles) {
+    public String createToken(String username,String userId, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roles);
+        claims.put("user_id", userId);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + jwtExpiration);
@@ -51,8 +52,12 @@ public class JwtProvider {
 
     public String getUsername(String token) {
         return Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token).getBody().getSubject();
-    }
 
+    }
+    public String getUserId(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
+        return claims.get("user_id", String.class);
+    }
     public List<String> getRoles(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token).getBody();
         return (List<String>) claims.get("roles");

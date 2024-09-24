@@ -18,7 +18,6 @@ import java.util.UUID;
 public class UserProfile {
 
     @Id
-    @GeneratedValue(generator = "UUID")
     @Column(updatable = false, nullable = false)
     private UUID userId;
 

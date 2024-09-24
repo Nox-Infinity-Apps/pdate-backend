@@ -25,13 +25,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/graphql","/graphiql/**")  // Bỏ qua CSRF cho /graphql
-        )
+                .ignoringRequestMatchers("/graphql","/graphiql/**"))
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/graphql","graphiql/**").permitAll() // Tuỳ chỉnh URL
+                        .requestMatchers("graphiql/**").permitAll()
+                        .requestMatchers("/graphql").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

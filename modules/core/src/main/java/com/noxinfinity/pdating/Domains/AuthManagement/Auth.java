@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,11 +21,11 @@ import java.util.UUID;
 @Setter
 public class Auth implements UserDetails {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(name = "user_id")
+    @Column(updatable = false, nullable = false)
     private UUID userId;
 
     @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 
@@ -40,8 +42,9 @@ public class Auth implements UserDetails {
 
 
     public Auth(String username, String password,List<String> roles) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.username = username;
-        this.password = password;
+        this.password = encoder.encode(password);
         this.roles = roles;
     }
 
