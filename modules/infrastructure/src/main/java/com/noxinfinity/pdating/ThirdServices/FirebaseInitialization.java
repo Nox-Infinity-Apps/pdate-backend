@@ -6,7 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 @Configuration
@@ -21,8 +21,10 @@ public class FirebaseInitialization {
                 return firebaseApps.get(0);
             }
 
-            FileInputStream serviceAccount =
-                    new FileInputStream("/Users/n0x/IDEAIJ/GCGV/modules/app/src/main/resources/serviceAccountKey.json");
+            InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("serviceAccountKey.json");
+            if (serviceAccount == null) {
+                throw new RuntimeException("Failed to load serviceAccountKey.json");
+            }
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
