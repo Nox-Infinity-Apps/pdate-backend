@@ -21,4 +21,9 @@ public class GoogleService implements IGoogleService{
     public Object getUserData(String token) {
         return new Object();
     }
+
+    @Override
+    public String getEmailUser(String token) throws Exception {
+        return firebaseService.getEmailTokenVerifired(token);
+    }
 }

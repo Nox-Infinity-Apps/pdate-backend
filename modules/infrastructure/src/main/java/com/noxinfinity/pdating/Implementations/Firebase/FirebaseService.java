@@ -1,6 +1,7 @@
 package com.noxinfinity.pdating.Implementations.Firebase;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import org.springframework.stereotype.Service;
 
@@ -11,5 +12,8 @@ public class FirebaseService {
     }
     public Boolean isTokenVerified(String token)throws Exception {
         return FirebaseAuth.getInstance().verifyIdToken(token).isEmailVerified();
+    }
+    public String getEmailTokenVerifired(String token) throws Exception {
+        return FirebaseAuth.getInstance().verifyIdToken(token).getEmail();
     }
 }

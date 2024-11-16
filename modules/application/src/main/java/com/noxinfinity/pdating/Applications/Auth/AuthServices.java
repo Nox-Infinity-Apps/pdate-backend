@@ -15,11 +15,11 @@ public class AuthServices implements IAuth{
     public String loginWithGoogle(String token) {
         try{
             if(ggService.isValidToken(token)){
-                return ggService.getUserData(token).toString();
+                return ggService.getEmailUser(token);
             }
-            return "";
+            return "Lỗi validate token";
         } catch (Exception e){
-            return "";
+            return "Có lỗi phía server";
         }
     }
 
