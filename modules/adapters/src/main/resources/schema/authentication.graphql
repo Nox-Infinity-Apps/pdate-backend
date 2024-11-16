@@ -19,5 +19,9 @@ type UserFromGoogle {
     fullName : String!
     provider : String!
 }
+type LoginWithGoogle{
+    accessToken: String!
+    user: UserFromGoogle
+}
 
 

@@ -2,6 +2,7 @@ package com.noxinfinity.pdating.Primary.Auth;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
+import com.noxinfinity.pdate.graphql.types.LoginWithGoogle;
 import io.sentry.Sentry;
 import com.netflix.graphql.dgs.InputArgument;
 import com.noxinfinity.pdate.graphql.types.LoginByGoogleResponse;
@@ -19,17 +20,21 @@ public class AuthMutation {
 
     @DgsMutation()
     public LoginByGoogleResponse loginByGoogle(@InputArgument(name = "token") String token) throws Exception {
-        String res = authService.loginWithGoogle(token);
         try {
-            throw new Exception("DDD");
+            LoginWithGoogle res = authService.loginWithGoogle(token);
+            return new LoginByGoogleResponse
+                    .Builder()
+                    .message("Login google thành công")
+                    .status(StatusEnum.SUCCESS)
+                    .accessToken(res)
+                    .build();
         }catch (Exception e){
-            Sentry.captureException(e);
+            return new LoginByGoogleResponse
+                    .Builder()
+                    .message(e.getMessage())
+                    .status(StatusEnum.FAILED)
+                    .accessToken("")
+                    .build();
         }
-        return new LoginByGoogleResponse
-                .Builder()
-                .message("??? reload dayyyy??")
-                .status(StatusEnum.FAILED)
-                .token(res)
-                .build();
     }
 }

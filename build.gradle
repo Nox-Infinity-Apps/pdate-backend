@@ -48,13 +48,17 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+
 }
 
-generateJava {
-    schemaPaths = ["${projectDir}/modules/application//src/main/resources/graphql-client"]
-    packageName = 'com.noxinfinity.pdating.codegen'
-    generateClient = true
+generateJava{
+    schemaPaths = ["${projectDir}/modules/adapters/src/main/resources/schema"]
+    packageName = 'com.noxinfinity.pdate.graphql'
+    generateClient = false
 }
+
+apply plugin: 'com.netflix.dgs.codegen'
 
 tasks.named('test') {
     useJUnitPlatform()
