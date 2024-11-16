@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
+import java.util.List;
 
 @Configuration
 public class FirebaseInitialization {
@@ -14,6 +15,12 @@ public class FirebaseInitialization {
     @Bean
     public FirebaseApp initialization() {
         try {
+
+            List<FirebaseApp> firebaseApps = FirebaseApp.getApps();
+            if (!firebaseApps.isEmpty()) {
+                return firebaseApps.get(0);
+            }
+
             FileInputStream serviceAccount =
                     new FileInputStream("/Users/n0x/IDEAIJ/GCGV/modules/app/src/main/resources/serviceAccountKey.json");
 

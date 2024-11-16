@@ -36,6 +36,7 @@ bootJar {
 dependencies {
     implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
     testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     implementation project(':modules:core')
     implementation project(':modules:application')

@@ -12,7 +12,7 @@ public class AuthMutation {
     public LoginByGoogleResponse loginByGoogle(@InputArgument(name = "token") String token) {
         return new LoginByGoogleResponse
                 .Builder()
-                .message("ASAA")
+                .message("??? reload dayyyy??")
                 .status(StatusEnum.FAILED)
                 .build();
     }
