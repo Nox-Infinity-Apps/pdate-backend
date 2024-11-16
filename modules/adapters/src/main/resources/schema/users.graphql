@@ -1,0 +1,20 @@
+extend type Query {
+    getUserInfo: UserInfoResponse!
+}
+
+union UserInfoResponse = UserInfoSuccessResponse | UserInfoFailedResponse
+
+type UserInfoFailedResponse implements ResponseBase{
+    status: StatusEnum!
+    message: String!
+}
+
+type UserInfoSuccessResponse implements ResponseBase{
+    message: String!
+    status: StatusEnum!
+    data: UserData
+}
+
+type UserData {
+    userId: String!
+}

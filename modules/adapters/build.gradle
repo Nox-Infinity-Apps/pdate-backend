@@ -1,9 +1,19 @@
+buildscript {
+    dependencies{
+        classpath 'com.netflix.graphql.dgs.codegen:graphql-dgs-codegen-gradle:6.2.1'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'com.netflix.dgs.codegen'
+
 }
+
+
+
 
 group = 'com.noxinfinity.pdating'
 version = '0.0.1-SNAPSHOT'
@@ -47,3 +57,13 @@ dependencies {
   // testing facilities
   testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:14.0.0'
 }
+
+
+generateJava{
+    schemaPaths = ["${projectDir}/src/main/resources/schema"]
+    packageName = 'com.noxinfinity.pdate.graphql'
+    generateClient = false
+}
+
+apply plugin: 'com.netflix.dgs.codegen'
+
