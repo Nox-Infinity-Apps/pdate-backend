@@ -32,6 +32,9 @@ public class Auth implements UserDetails {
     @Column(name = "provider", columnDefinition = "ENUM('GOOGLE', 'APPLE')")
     private AuthProvider provider;
 
+    @Column(name="fcm_notification_token")
+    private String fcmNotificationToken;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
     private Date createdAt;

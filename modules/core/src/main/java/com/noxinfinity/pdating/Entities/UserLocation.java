@@ -3,31 +3,27 @@ package com.noxinfinity.pdating.Entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.UUID;
-
-@Entity
 @Getter
 @Setter
-public class UserHobbies {
+@Entity
+@Accessors(chain = true)
+public class UserLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fcm_id", insertable = false, updatable = false)
-    private UUID fcmId;
+    @Column(name = "lat")
+    private String lat;
 
-    @Column(name = "hobby_id", insertable = false, updatable = false)
-    private Long hobbyId;
+    @Column(name = "lng")
+    private String lng;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserData userData;
-
-    @ManyToOne
-    @JoinColumn(name = "hobby_id", referencedColumnName = "id")
-    private Hobbies hobbies;
 }

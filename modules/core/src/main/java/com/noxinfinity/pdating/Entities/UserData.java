@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -20,16 +21,24 @@ public class UserData {
     @Column(name = "fcm_id", unique = true, nullable = false)
     private UUID userId;
 
-    @Column(name="fullname")
+    @Column(name = "fullname")
     private String fullName;
 
-    @Column(name="dob")
+    @Column(name = "dob")
     private Date dob;
 
-    @Column(name="avatar_url")
+    @Column(name = "avatar_url")
     private String avatarUrl;
 
-    @Column(name="bio")
+    @ManyToOne
+    @JoinColumn(name = "grade_id", referencedColumnName = "id")
+    private Grades grade;
+
+    @ManyToOne
+    @JoinColumn(name = "major_id", referencedColumnName = "id")
+    private Majors major;
+
+    @Column(name = "bio")
     private String bio;
 
     @OneToOne
@@ -37,12 +46,18 @@ public class UserData {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Auth auth;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "current_user_id", referencedColumnName = "fcm_id")
-    private UserData currentUser;
+    @OneToOne(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserLocation location;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "target_user_id", referencedColumnName = "fcm_id")
-    private UserData targetUser;
+    @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserHobbies> hobbies;
+
+    @OneToMany(mappedBy = "currentUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserLikes> likesGiven;
+
+    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserLikes> likesReceived;
+
+    @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserInConversation> conversationsParticipated;
 }
-
