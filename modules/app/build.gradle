@@ -4,6 +4,8 @@ plugins {
     id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'java'
+    id "io.sentry.jvm.gradle" version "4.13.0"
+
 }
 
 group = 'com.noxinfinity.pdating'
@@ -32,11 +34,18 @@ bootJar {
     archiveFileName = 'app.jar'
 }
 
+sentry {
+    includeSourceContext = true
+    org = "pdate"
+    projectName = "pdate"
+    authToken = "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"
+}
 
 dependencies {
     implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
     testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 
     implementation project(':modules:core')
     implementation project(':modules:application')
@@ -57,4 +66,6 @@ dependencies {
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+
 

@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'io.spring.dependency-management'
     id 'org.springframework.boot'
+    id "io.sentry.jvm.gradle" version "4.13.0"
 }
 
 group = 'com.noxinfinity.pdating'
