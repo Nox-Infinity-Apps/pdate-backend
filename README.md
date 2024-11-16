@@ -19,10 +19,12 @@
 - Stream SDK
 - Cloudflare R2
 - Mapbox API
+- Sentry: Debug tool
 
 ### 5. Virtualization & Deployment
 
 - Docker
+- Nginx
 
 ## II. Cấu trúc thư mục
 
