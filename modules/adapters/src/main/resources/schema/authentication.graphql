@@ -12,8 +12,10 @@ type LoginByGoogleResponse implements ResponseBase{
     isNew : Boolean!
 }
 
+
+
 type UserFromGoogle {
-    fcm_id : UUID
+    fcm_id : String!
     email : String!
     avatar : String
     fullName : String!

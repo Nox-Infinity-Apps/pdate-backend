@@ -52,9 +52,21 @@ dependencies {
 
 }
 
+subprojects {
+    afterEvaluate { project ->
+        project.sourceSets {
+            main {
+                java {
+                    srcDir "${rootProject.buildDir}/generated"
+                }
+            }
+        }
+    }
+}
+
 generateJava{
     schemaPaths = ["${projectDir}/modules/adapters/src/main/resources/schema"]
-    packageName = 'com.noxinfinity.pdate.graphql'
+    packageName = 'com.noxinfinity.pdating.graphql'
     generateClient = false
 }
 

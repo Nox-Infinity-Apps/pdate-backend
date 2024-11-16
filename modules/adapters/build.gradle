@@ -59,11 +59,4 @@ dependencies {
 }
 
 
-generateJava{
-    schemaPaths = ["${projectDir}/src/main/resources/schema"]
-    packageName = 'com.noxinfinity.pdate.graphql'
-    generateClient = false
-}
-
-apply plugin: 'com.netflix.dgs.codegen'
 
