@@ -40,6 +40,9 @@ bootJar {
 
 
 dependencies {
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.postgresql:postgresql:42.6.0'
+
     implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
     testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
 
