@@ -1,5 +1,6 @@
 package com.noxinfinity.pdating.Applications.Auth;
 
+import com.noxinfinity.pdate.graphql.types.LoginWithGoogle;
 import com.noxinfinity.pdating.Domains.AuthManagement.Google.IGoogleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ public class AuthServices implements IAuth{
         this.ggService = ggService;
     }
     @Override
-    public String loginWithGoogle(String token) {
+    public LoginWithGoogle loginWithGoogle(String token) {
         try{
             if(ggService.isValidToken(token)){
                 return ggService.getEmailUser(token);

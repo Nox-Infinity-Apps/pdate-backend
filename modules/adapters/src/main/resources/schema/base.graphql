@@ -8,12 +8,3 @@ interface ResponseBase {
     message: String!
 }
 
-type Response implements ResponseBase{
-    code: Int!
-    status: StatusEnum!
-    body: Body!
-    message: String!
-}
-
-union Body = LoginResponseData | RegisterResponseData | ChangePasswordResponseData
-

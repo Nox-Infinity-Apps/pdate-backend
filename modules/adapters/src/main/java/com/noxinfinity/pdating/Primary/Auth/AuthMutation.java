@@ -26,7 +26,7 @@ public class AuthMutation {
                     .Builder()
                     .message("Login google thành công")
                     .status(StatusEnum.SUCCESS)
-                    .accessToken(res)
+                    .accessToken(res.getAccessToken())
                     .build();
         }catch (Exception e){
             return new LoginByGoogleResponse
