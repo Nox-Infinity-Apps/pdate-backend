@@ -1,6 +1,7 @@
 extend type Mutation {
     addToTestUser(name: String!): Response
     login(loginRequest: LoginRequest!): Response
+    loginByGoogle(token: String!): LoginByGoogleResponse
     register(registerRequest: RegisterRequest!): Response
     changePassword(changePasswordRequest: ChangePasswordRequest!): Response
 }
@@ -31,5 +32,9 @@ type ChangePasswordResponseData {
 }
 
 
+type LoginByGoogleResponse implements ResponseBase{
+    status: StatusEnum!
+    message: String!
+}
 
 

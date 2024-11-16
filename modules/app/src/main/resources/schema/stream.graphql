@@ -1,0 +1,16 @@
+extend type Mutation {
+    GetStreamToken(UserId: String!): GetStreamTokenResult!
+}
+
+union GetStreamTokenResult = GetStreamTokenSuccessResult | GetStreamTokenFailedResult
+
+type GetStreamTokenSuccessResult implements ResponseBase{
+    status: StatusEnum!
+    message: String!
+    token: String!
+}
+
+type GetStreamTokenFailedResult implements ResponseBase{
+    status: StatusEnum!
+    message: String!
+}
