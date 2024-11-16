@@ -1,0 +1,3 @@
+###  Infras chỉ chứa những service/config/third part server không có mối quan hệ gì với các tầng trên
+
+Ví dụ: Storage/Cache/...
