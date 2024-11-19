@@ -2,12 +2,10 @@ package com.noxinfinity.pdating.GraphQL.Scalars;
 
 import com.netflix.graphql.dgs.DgsScalar;
 import graphql.language.StringValue;
-import graphql.language.Value;
 import graphql.schema.Coercing;
 import graphql.schema.CoercingParseLiteralException;
 import graphql.schema.CoercingParseValueException;
 import graphql.schema.CoercingSerializeException;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
@@ -41,10 +39,5 @@ public class UUIDScalar implements Coercing<UUID, String> {
             }
         }
         throw new CoercingParseLiteralException("Value is not a valid UUID literal");
-    }
-
-    @Override
-    public Value valueToLiteral(@NotNull Object input) {
-        return new StringValue(this.serialize(input));
     }
 }

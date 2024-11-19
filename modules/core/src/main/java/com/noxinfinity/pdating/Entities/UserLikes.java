@@ -15,14 +15,14 @@ public class UserLikes {
     private Long id;
 
     @Column(name = "current_user_id", insertable = false, updatable = false)
-    private UUID currentUserId;
+    private String currentUserId;
 
     @ManyToOne
     @JoinColumn(name = "current_user_id", referencedColumnName = "fcm_id")
     private UserData currentUser;
 
     @Column(name = "target_user_id", insertable = false, updatable = false)
-    private UUID targetUserId;
+    private String targetUserId;
 
     @ManyToOne
     @JoinColumn(name = "target_user_id", referencedColumnName = "fcm_id")

@@ -15,15 +15,22 @@ public class AuthServices implements IAuth{
     }
     @Override
     public LoginWithGoogle loginWithGoogle(String token) throws Exception {
-            if(ggService.isValidToken(token)){
-                UserFromGoogle user =  ggService.getUser(token);
-                return new LoginWithGoogle.Builder().user(user).accessToken(token).build();
-            }
-           throw new Exception("Access token is not valid");
+        if(ggService.isValidToken(token)){
+            UserFromGoogle user =  ggService.getUser(token);
+            return new LoginWithGoogle.Builder().user(user).accessToken(token).build();
+        }
+        throw new Exception("Access token is not valid");
     }
 
     @Override
     public String loginWithApple(String token) {
         return "";
+    }
+
+    public UserFromGoogle getUserFromToken(String token) throws Exception {
+        if(ggService.isValidToken(token)){
+            return ggService.getUser(token);
+        }
+        throw new Exception("Access token is not valid");
     }
 }
