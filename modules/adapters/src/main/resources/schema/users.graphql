@@ -17,4 +17,46 @@ type UserInfoSuccessResponse implements ResponseBase{
 
 type UserData {
     userId: String!
+    email: String!
+    fullName: String!
+    avatar: String
+    provider: String!
+    fcmNotificationToken: String
+    dob : String
+    bio : String
+    major : Major
+    grade : Grade
+    location : Location
+    hobbies : [Hobbies]
+    pictures : [Pics]
 }
+
+type Major {
+    id : Int
+    name : String
+    iconUrl : String
+}
+type Grade{
+    id : Int
+    name : String
+}
+type Location {
+    id : Int
+    lat : String
+    lng : String
+}
+type Hobbies {
+    id : Int
+    title : String
+    iconUrl : String
+}
+type Pics{
+    id : Int
+    url : String
+}
+type Likes{
+    id : Int
+    currentUserId : String
+    targetUserId : String
+}
+
