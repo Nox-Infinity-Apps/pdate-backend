@@ -24,6 +24,7 @@ type UserFromGoogle {
 type LoginWithGoogle{
     accessToken: String!
     user: UserFromGoogle
+    isNew : Boolean!
 }
 
 

@@ -17,7 +17,7 @@ public class UserHobbies {
     private Long id;
 
     @Column(name = "fcm_id", insertable = false, updatable = false)
-    private UUID fcmId;
+    private String fcmId;
 
     @Column(name = "hobby_id", insertable = false, updatable = false)
     private Long hobbyId;

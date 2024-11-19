@@ -23,7 +23,7 @@ public class Auth implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "fcm_id", unique = true, nullable = false)
-    private UUID fcmId;
+    private String fcmId;
 
     @Column(name = "email")
     private String email;

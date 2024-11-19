@@ -38,7 +38,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-admin:9.4.1'
 
 
-
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.auth0:java-jwt:4.2.1'
     // Other infrastructure-related dependencies
 }

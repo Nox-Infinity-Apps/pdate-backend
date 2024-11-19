@@ -19,7 +19,7 @@ import java.util.UUID;
 public class UserData {
     @Id
     @Column(name = "fcm_id", unique = true, nullable = false)
-    private UUID userId;
+    private String userId;
 
     @Column(name = "fullname")
     private String fullName;

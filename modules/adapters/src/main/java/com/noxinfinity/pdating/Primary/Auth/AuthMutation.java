@@ -28,7 +28,7 @@ public class AuthMutation {
                     .status(StatusEnum.SUCCESS)
                     .accessToken(response.getAccessToken())
                     .user(response.getUser())
-                    .isNew(true)
+                    .isNew(response.getIsNew())
                     .build();
         }catch (Exception e){
             return new LoginByGoogleResponse
