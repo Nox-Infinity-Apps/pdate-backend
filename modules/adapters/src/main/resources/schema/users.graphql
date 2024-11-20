@@ -1,5 +1,6 @@
 extend type Query {
     getUserInfo: UserInfoResponse!
+    suggestedUsers(currentLat: Float!, currentLng: Float!, limit: Int, offset: Int): [UserSuggest]
 }
 
 union UserInfoResponse = UserInfoSuccessResponse | UserInfoFailedResponse
@@ -17,4 +18,33 @@ type UserInfoSuccessResponse implements ResponseBase{
 
 type UserData {
     userId: String!
+}
+
+type UserSuggest {
+    fcmId: String!
+    fullName: String
+    dob: String
+    avatarUrl: String
+    grade: Grade
+    major: Major
+    bio: String
+    distance: Int
+    commonHobbies: [Hobbie]
+}
+
+type Grade {
+    id: Int
+    name: String
+}
+
+type Major {
+    id: Int
+    name: String
+    iconUrl: String
+}
+
+type Hobbie {
+    id: Int
+    title: String
+    iconUrl: String
 }
