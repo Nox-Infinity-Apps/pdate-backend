@@ -1,16 +1,19 @@
 package com.noxinfinity.pdating.Domains.UserDataManagement.UserData;
 
-import com.noxinfinity.pdating.Entities.Auth;
+import com.noxinfinity.pdating.Entities.*;
 import com.noxinfinity.pdating.Entities.Enums.AuthProvider;
+import com.noxinfinity.pdating.Entities.Hobbies;
 import com.noxinfinity.pdating.Entities.UserData;
-import com.noxinfinity.pdating.Entities.UserHobbies;
-import com.noxinfinity.pdating.Entities.UserPics;
 import com.noxinfinity.pdating.Repository.Auth.IAuthRespository;
+import com.noxinfinity.pdating.Repository.Other.IGradeRespository;
+import com.noxinfinity.pdating.Repository.Other.IHobbiesRespository;
+import com.noxinfinity.pdating.Repository.Other.IMajorRespository;
 import com.noxinfinity.pdating.Repository.UserData.IUserDataRepository;
 import com.noxinfinity.pdating.graphql.types.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,11 +22,17 @@ import java.util.stream.Collectors;
 public class UserDataService implements IUserDataService {
     private final IUserDataRepository _user;
     private final IAuthRespository _auth;
+    private final IGradeRespository _grade;
+    private final IMajorRespository _major;
+    private final IHobbiesRespository _hobbies;
 
     @Autowired
-    public UserDataService(IUserDataRepository userDataRepository, IAuthRespository authRepository) {
+    public UserDataService(IUserDataRepository userDataRepository, IAuthRespository authRepository , IGradeRespository gradeRespository , IMajorRespository majorRespository, IHobbiesRespository hobbiesRespository) {
         this._user = userDataRepository;
         this._auth = authRepository;
+        this._grade = gradeRespository;
+        this._major = majorRespository;
+        this._hobbies = hobbiesRespository;
     }
     public Boolean createOrUpdateUserDataFromGoogleReturnIsNew(UserFromGoogle user) {
         //Tìm xem user đã tồn tại chưa
@@ -107,10 +116,68 @@ public class UserDataService implements IUserDataService {
         }
     }
 
+    @Override
+    public com.noxinfinity.pdating.graphql.types.UserData updateUserDataById(String id, UpdateUserInfo body) throws Exception {
+        com.noxinfinity.pdating.graphql.types.UserData userData = new com.noxinfinity.pdating.graphql.types.UserData();
+        UserData user = _user.findById(id).orElse(null);
+        if (user == null) {
+            throw new Exception("Không tồn tại user");
+        } else {
+            // Cập nhật thông tin cơ bản
+            user.setAvatarUrl(body.getAvatar());
+            user.setBio(body.getBio());
+            user.setDob(new SimpleDateFormat("dd/MM/yyyy").parse(body.getDob()));
+            user.setFullName(body.getFullName());
+            user.setGrade(_grade.findById(Long.valueOf(body.getGrade())).orElse(null));
+            user.setMajor(_major.findById(Long.valueOf(body.getMajor())).orElse(null));
 
-    private List<Hobbies> mapUserHobbiesToHobbies(List<UserHobbies> userHobbiesList) {
+            // Cập nhật Auth
+            Auth auth = user.getAuth();
+            auth.setFcmNotificationToken(body.getFcmNotificationToken());
+            auth.setEmail(body.getEmail());
+            auth.setProvider(AuthProvider.valueOf(body.getProvider().toUpperCase()));
+            _auth.save(auth);
+
+            // Cập nhật Location
+            UserLocation location = new UserLocation();
+            location.setLat(body.getLocation().getLat());
+            location.setLng(body.getLocation().getLng());
+            user.setLocation(location);
+
+            // Cập nhật Hobbies
+            List<Long> hobbyIds = body.getHobbies().stream()
+                    .map(Integer::longValue)
+                    .toList();; // Danh sách id từ body
+            List<Hobbies> hobbiesFromDb = _hobbies.findAllById(hobbyIds); // Lấy danh sách hobbies từ DB
+            if (hobbiesFromDb.size() != hobbyIds.size()) {
+                throw new Exception("Một hoặc nhiều sở thích không tồn tại trong danh sách.");
+            }
+
+            // Xóa các hobbies cũ
+            List<UserHobbies> currentHobbies = user.getHobbies();
+            currentHobbies.clear();
+
+            // Thêm hobbies mới
+            for (Hobbies hobby : hobbiesFromDb) {
+                UserHobbies userHobby = new UserHobbies();
+                userHobby.setUserData(user);
+                userHobby.setHobbies(hobby);
+                currentHobbies.add(userHobby);
+            }
+
+            user.setHobbies(currentHobbies);
+
+            // Lưu UserData
+            _user.save(user);
+            return null;
+        }
+    }
+
+
+
+    private List<com.noxinfinity.pdating.graphql.types.Hobbies> mapUserHobbiesToHobbies(List<UserHobbies> userHobbiesList) {
         return userHobbiesList.stream()
-                .map(userHobby -> new Hobbies.Builder()
+                .map(userHobby -> new com.noxinfinity.pdating.graphql.types.Hobbies.Builder()
                         .id(Math.toIntExact(userHobby.getHobbies().getId()))
                         .title(userHobby.getHobbies().getTitle())
                         .iconUrl(userHobby.getHobbies().getIconUrl())

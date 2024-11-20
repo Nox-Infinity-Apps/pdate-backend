@@ -1,6 +1,28 @@
 extend type Query {
     getUserInfo: UserInfoResponse!
 }
+extend type Mutation {
+    updateUserInfo(input: UpdateUserInfo): UserInfoResponse!
+}
+
+input UpdateUserInfo {
+    fullName: String
+    avatar: String
+    email : String
+    fcmNotificationToken: String
+    dob: String
+    bio: String
+    major: Int
+    grade: Int
+    location: LocationUser
+    hobbies: [Int]
+    provider: String
+}
+
+input LocationUser {
+    lat: String
+    lng: String
+}
 
 union UserInfoResponse = UserInfoSuccessResponse | UserInfoFailedResponse
 
