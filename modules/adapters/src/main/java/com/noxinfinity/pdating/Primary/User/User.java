@@ -6,11 +6,13 @@ import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import com.noxinfinity.pdating.Applications.User.IUserApp;
 import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
+import com.noxinfinity.pdating.GraphQL.Scalars.UploadScalar;
 import com.noxinfinity.pdating.graphql.types.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 @DgsComponent
 public class User {
@@ -44,6 +46,19 @@ public class User {
             return userApp.updateUserInfoById(decodedToken.getFcm_id(),input);
         } catch (Exception e){
             return new UserInfoFailedResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+        }
+    }
+
+    @DgsMutation
+    @ValidateToken
+    public CloudinaryUploadResponse uploadAvatar(@InputArgument(name = "file") MultipartFile file){
+        try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
+            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
+            return userApp.uploadAvatar(decodedToken.getFcm_id(),file);
+        } catch (Exception e){
+            return new CloudinaryUploadResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }
     }
 }

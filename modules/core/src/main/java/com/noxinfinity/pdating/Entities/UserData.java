@@ -30,6 +30,9 @@ public class UserData {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
+    @Column(name = "public_avatar_id")
+    private String publicAvataId;
+
     @ManyToOne
     @JoinColumn(name = "grade_id", referencedColumnName = "id")
     private Grades grade;
@@ -60,4 +63,7 @@ public class UserData {
 
     @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserInConversation> conversationsParticipated;
+
+    @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserPics> userPics;
 }

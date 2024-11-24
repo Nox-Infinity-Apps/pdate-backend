@@ -62,7 +62,6 @@ public class UserDataService implements IUserDataService {
         } else {
             // Nếu đã tồn tại thì cập nhật thông tin
             userData.setFullName(user.getFullName());
-            userData.setAvatarUrl(user.getAvatar());
             _user.save(userData);
 
             Auth auth = _auth.findById(user.getFcm_id()).orElse(null);
@@ -157,7 +156,7 @@ public class UserDataService implements IUserDataService {
                     .toList();; // Danh sách id từ body
             List<Hobbies> hobbiesFromDb = _hobbies.findAllById(hobbyIds); // Lấy danh sách hobbies từ DB
             if (hobbiesFromDb.size() != hobbyIds.size()) {
-                throw new Exception("Một hoặc nhiều sở thích không tồn tại trong danh sách.");
+                throw new Exception("Sở thích không tồn tại trong danh sách.");
             }
 
             // Xóa các hobbies cũ
