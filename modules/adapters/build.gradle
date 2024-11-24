@@ -8,7 +8,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
-    id 'com.netflix.dgs.codegen'
     id "io.sentry.jvm.gradle" version "4.13.0"
 }
 
@@ -57,6 +56,3 @@ dependencies {
   // testing facilities
   testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:14.0.0'
 }
-
-
-

@@ -1,0 +1,22 @@
+extend type Query {
+    getAllConversation(limit: Int!, page: Int!): GetAllConversationResponse
+}
+
+type GetAllConversationResponse {
+    hasMore: Boolean!
+    page: Boolean!
+    total: Int!
+    currentPage: Int!
+    data: [Conversation]
+}
+
+type Conversation{
+    id: String!
+    usersInConversation: [UserInConversation]!
+}
+
+type UserInConversation{
+    id: String!
+    fullName: String!
+    avatar: String!
+}

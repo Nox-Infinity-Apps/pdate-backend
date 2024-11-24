@@ -68,6 +68,9 @@ generateJava{
     schemaPaths = ["${projectDir}/modules/adapters/src/main/resources/schema"]
     packageName = 'com.noxinfinity.pdating.graphql'
     generateClient = false
+    typeMapping = [
+            "UUID" : "java.util.UUID"
+    ]
 }
 
 apply plugin: 'com.netflix.dgs.codegen'
