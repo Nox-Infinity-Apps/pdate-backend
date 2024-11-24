@@ -1,6 +1,7 @@
 extend type Mutation {
     addToTestUser(name: String!): Response
     loginByGoogle(token: String!): LoginByGoogleResponse
+    loginByApple(token: String!): String
 }
 
 
@@ -24,6 +25,15 @@ type UserFromGoogle {
 type LoginWithGoogle{
     accessToken: String!
     user: UserFromGoogle
+    isNew : Boolean!
+}
+
+type DecodedToken {
+    id : String!
+    email : String!
+    fullName : String!
+    avatar : String
+    provider : String!
 }
 
 

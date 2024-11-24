@@ -21,7 +21,6 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class Auth implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "fcm_id", unique = true, nullable = false)
     private String fcmId;
 

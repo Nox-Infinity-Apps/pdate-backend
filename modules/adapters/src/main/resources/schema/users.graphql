@@ -3,6 +3,29 @@ extend type Query {
     suggestedUsers(currentLat: Float!, currentLng: Float!, limit: Int, offset: Int): [UserSuggest]
 }
 
+extend type Mutation {
+    updateUserInfo(input: UpdateUserInfo): UserInfoResponse!
+}
+
+input UpdateUserInfo {
+    fullName: String
+    avatar: String
+    email : String
+    fcmNotificationToken: String
+    dob: String
+    bio: String
+    major: Int
+    grade: Int
+    location: LocationUser
+    hobbies: [Int]
+    provider: String
+}
+
+input LocationUser {
+    lat: String
+    lng: String
+}
+
 union UserInfoResponse = UserInfoSuccessResponse | UserInfoFailedResponse
 
 type UserInfoFailedResponse implements ResponseBase{
@@ -18,7 +41,49 @@ type UserInfoSuccessResponse implements ResponseBase{
 
 type UserData {
     userId: String!
+    email: String!
+    fullName: String!
+    avatar: String
+    provider: String!
+    fcmNotificationToken: String
+    dob : String
+    bio : String
+    major : Major
+    grade : Grade
+    location : Location
+    hobbies : [Hobbies]
+    pictures : [Pics]
 }
+
+type Major {
+    id : Int
+    name : String
+    iconUrl : String
+}
+type Grade{
+    id : Int
+    name : String
+}
+type Location {
+    id : Int
+    lat : String
+    lng : String
+}
+type Hobbies {
+    id : Int
+    title : String
+    iconUrl : String
+}
+type Pics{
+    id : Int
+    url : String
+}
+type Likes{
+    id : Int
+    currentUserId : String
+    targetUserId : String
+}
+
 
 type UserSuggest {
     fcmId: String!
