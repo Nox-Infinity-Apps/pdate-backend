@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "jwt")
 public class JWTConfig {
-
-    // 1 ngày (đơn vị: ms)
     private static final long EXPIRATION_TIME_MS = 86400000L;
 
     @Value("${jwt.secret}")

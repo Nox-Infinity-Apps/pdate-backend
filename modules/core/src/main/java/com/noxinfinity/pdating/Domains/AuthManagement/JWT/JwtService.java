@@ -3,6 +3,7 @@ package com.noxinfinity.pdating.Domains.AuthManagement.JWT;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.noxinfinity.pdating.ThirdServices.StreamChat;
 import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,20 +16,25 @@ public class JwtService implements IJwtService {
     private final String secretKey;
     private final long expirationTimeMs;
 
+    private final StreamChat streamChat;
+
     @Autowired
-    public JwtService(String jwtSecretKey, long jwtExpirationTimeMs) {
+    public JwtService(String jwtSecretKey, long jwtExpirationTimeMs, StreamChat streamChat) {
         this.secretKey = jwtSecretKey;
         this.expirationTimeMs = jwtExpirationTimeMs;
+        this.streamChat = streamChat;
     }
 
     @Override
     public String generateToken(UserFromGoogle user) {
+        String streamToken = this.streamChat.signToken(user.getFcm_id());
         return JWT.create()
                 .withClaim("id", user.getFcm_id())
                 .withClaim("email", user.getEmail())
                 .withClaim("fullName", user.getFullName())
                 .withClaim("avatar", user.getAvatar())
                 .withClaim("provider", user.getProvider())
+                .withClaim("streamToken", streamToken)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeMs))
                 .sign(Algorithm.HMAC256(secretKey));
