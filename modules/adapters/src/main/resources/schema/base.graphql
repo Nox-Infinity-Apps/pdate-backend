@@ -8,10 +8,3 @@ interface ResponseBase {
     message: String!
 }
 
-type Response implements ResponseBase{
-    code: Int!
-    status: StatusEnum!
-    message: String!
-}
-
-

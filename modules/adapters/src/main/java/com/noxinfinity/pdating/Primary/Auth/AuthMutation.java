@@ -2,11 +2,11 @@ package com.noxinfinity.pdating.Primary.Auth;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
-import com.noxinfinity.pdating.graphql.types.LoginWithGoogle;
+import com.noxinfinity.pdate.graphql.types.LoginWithGoogle;
 import io.sentry.Sentry;
 import com.netflix.graphql.dgs.InputArgument;
-import com.noxinfinity.pdating.graphql.types.LoginByGoogleResponse;
-import com.noxinfinity.pdating.graphql.types.StatusEnum;
+import com.noxinfinity.pdate.graphql.types.LoginByGoogleResponse;
+import com.noxinfinity.pdate.graphql.types.StatusEnum;
 import com.noxinfinity.pdating.Applications.Auth.IAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,14 +21,12 @@ public class AuthMutation {
     @DgsMutation()
     public LoginByGoogleResponse loginByGoogle(@InputArgument(name = "token") String token) throws Exception {
         try {
-            LoginWithGoogle response = authService.loginWithGoogle(token);
+            LoginWithGoogle res = authService.loginWithGoogle(token);
             return new LoginByGoogleResponse
                     .Builder()
-                    .message("Success")
+                    .message("Login google thành công")
                     .status(StatusEnum.SUCCESS)
-                    .accessToken(response.getAccessToken())
-                    .user(response.getUser())
-                    .isNew(true)
+                    .accessToken(res.getAccessToken())
                     .build();
         }catch (Exception e){
             return new LoginByGoogleResponse
@@ -36,7 +34,6 @@ public class AuthMutation {
                     .message(e.getMessage())
                     .status(StatusEnum.FAILED)
                     .accessToken("")
-                    .isNew(false)
                     .build();
         }
     }

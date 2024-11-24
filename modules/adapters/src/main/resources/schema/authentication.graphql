@@ -15,7 +15,7 @@ type LoginByGoogleResponse implements ResponseBase{
 
 
 type UserFromGoogle {
-    fcm_id : String!
+    fcm_id : String
     email : String!
     avatar : String
     fullName : String!
