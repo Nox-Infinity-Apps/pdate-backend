@@ -26,7 +26,7 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public String generateToken(UserFromGoogle user) {
+    public String generateToken(UserFromGoogle user) throws Exception {
         String streamToken = this.streamChat.signToken(user.getFcm_id());
         return JWT.create()
                 .withClaim("id", user.getFcm_id())

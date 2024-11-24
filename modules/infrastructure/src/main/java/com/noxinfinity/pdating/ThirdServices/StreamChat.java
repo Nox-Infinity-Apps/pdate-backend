@@ -1,4 +1,5 @@
 package com.noxinfinity.pdating.ThirdServices;
+import io.getstream.chat.java.exceptions.StreamException;
 import io.getstream.chat.java.models.User;
 import io.getstream.chat.java.services.framework.DefaultClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ public class StreamChat {
         DefaultClient.setInstance(client);
     }
 
-    public String signToken(String userId){
+    public String signToken(String userId) throws Exception {
+        var usersUpsertRequest = User.upsert();
+        usersUpsertRequest.user(User.UserRequestObject.builder().id(userId).role("user").build());
+        usersUpsertRequest.request();
         return User.createToken(userId, null, null);
     }
 }

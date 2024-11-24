@@ -9,6 +9,7 @@ import com.noxinfinity.pdating.Repository.Other.IGradeRespository;
 import com.noxinfinity.pdating.Repository.Other.IHobbiesRespository;
 import com.noxinfinity.pdating.Repository.Other.IMajorRespository;
 import com.noxinfinity.pdating.Repository.UserData.IUserDataRepository;
+import com.noxinfinity.pdating.ThirdServices.StreamChat;
 import com.noxinfinity.pdating.graphql.types.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,22 @@ public class UserDataService implements IUserDataService {
     private final IMajorRespository _major;
     private final IHobbiesRespository _hobbies;
 
+
     @Autowired
-    public UserDataService(IUserDataRepository userDataRepository, IAuthRespository authRepository , IGradeRespository gradeRespository , IMajorRespository majorRespository, IHobbiesRespository hobbiesRespository) {
+    public UserDataService(IUserDataRepository userDataRepository,
+                           IAuthRespository authRepository ,
+                           IGradeRespository gradeRespository ,
+                           IMajorRespository majorRespository,
+                           IHobbiesRespository hobbiesRespository,
+                           StreamChat streamChat) {
         this._user = userDataRepository;
         this._auth = authRepository;
         this._grade = gradeRespository;
         this._major = majorRespository;
         this._hobbies = hobbiesRespository;
+        this.streamChat = streamChat;
     }
-    public Boolean createOrUpdateUserDataFromGoogleReturnIsNew(UserFromGoogle user) {
+    public Boolean createOrUpdateUserDataFromGoogleReturnIsNew(UserFromGoogle user)  {
         //Tìm xem user đã tồn tại chưa
         UserData userData = _user.findById(user.getFcm_id()).orElse(null);
         if (userData == null) {
