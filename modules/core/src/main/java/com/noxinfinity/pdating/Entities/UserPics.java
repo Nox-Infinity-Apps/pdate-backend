@@ -18,6 +18,9 @@ public class UserPics {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "public_id")
+    private String publicId;
+
     @ManyToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

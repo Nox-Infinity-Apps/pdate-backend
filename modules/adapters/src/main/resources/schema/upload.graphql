@@ -1,6 +1,25 @@
 scalar Upload
 
 extend type Mutation  {
-    uploadScriptWithMultipartPOST(input: Upload!): String!
-    uploadFileScriptWithMultipartPOST(input: Upload!): String!
+    uploadScriptWithMultipartPOST(file: Upload!): CloudinaryUploadResponse!
+    uploadFileScriptWithMultipartPOST(file: Upload!): CloudinaryUploadResponse!
+    uploadAvatar(file: Upload!): CloudinaryUploadResponse!
+}
+
+type CloudinaryUploadResult {
+    url: String!
+    secureUrl: String!
+    publicId: String!
+    resourceType: String!
+    createdAt: String
+    folder: String!
+    type: String!
+    originalFilename: String!
+    signature: String!
+}
+
+type CloudinaryUploadResponse implements ResponseBase{
+    message: String!
+    status: StatusEnum!
+    data: String
 }
