@@ -35,6 +35,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     implementation 'com.cloudinary:cloudinary-http44:1.29.0'
+    implementation "io.getstream:stream-chat-java:+"
 
 
     compileOnly 'org.projectlombok:lombok:1.18.34'

@@ -40,7 +40,6 @@ public class UserDataService implements IUserDataService {
         this._grade = gradeRespository;
         this._major = majorRespository;
         this._hobbies = hobbiesRespository;
-        this.streamChat = streamChat;
     }
     public Boolean createOrUpdateUserDataFromGoogleReturnIsNew(UserFromGoogle user)  {
         //Tìm xem user đã tồn tại chưa

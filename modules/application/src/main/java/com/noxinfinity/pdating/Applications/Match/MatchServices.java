@@ -1,6 +1,7 @@
 package com.noxinfinity.pdating.Applications.Match;
 
 import com.noxinfinity.pdating.Domains.ConversationManagement.ConversationRepository;
+import com.noxinfinity.pdating.Domains.ConversationManagement.ConversationService;
 import com.noxinfinity.pdating.Domains.MatchManagement.UserLikeRepository;
 import com.noxinfinity.pdating.Domains.MatchManagement.UserMatchRepository;
 import com.noxinfinity.pdating.Domains.UserManagement.UserDataRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,16 +25,19 @@ public class MatchServices implements IMatch{
     private final UserMatchRepository userMatchRepository;
     private final UserDataRepository userDataRepository;
     private final ConversationRepository conversationRepository;
+    private final ConversationService conversationService;
 
     @Autowired
     public MatchServices(UserLikeRepository userLikeRepository,
                          UserDataRepository userDataRepository,
                          UserMatchRepository userMatchRepository,
-                         ConversationRepository conversationRepository) {
+                         ConversationRepository conversationRepository,
+                         ConversationService conversationService) {
         this.userLikeRepository = userLikeRepository;
         this.userDataRepository = userDataRepository;
         this.userMatchRepository = userMatchRepository;
         this.conversationRepository = conversationRepository;
+        this.conversationService = conversationService;
     }
 
     @Transactional
@@ -80,7 +85,7 @@ public class MatchServices implements IMatch{
     }
 
     @Transactional
-    protected Conversations match(UserData user1, UserData user2) {
+    protected Conversations match(UserData user1, UserData user2){
         try {
             UserMatched userMatched = new UserMatched();
             userMatched.setUser1(user1).setUser2(user2);
@@ -94,6 +99,10 @@ public class MatchServices implements IMatch{
             userInConversation2.setConversation(conversation).setUserData(user2);
 
             conversation.setUsersInConversation(List.of(userInConversation1, userInConversation2));
+            ArrayList<String> usersInConversationList = new ArrayList<>();
+            usersInConversationList.add(user1.getUserId());
+            usersInConversationList.add(user2.getUserId());
+            conversationService.createConversationForCouple(conversation.getId().toString(), usersInConversationList);
             return conversationRepository.save(conversation);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
