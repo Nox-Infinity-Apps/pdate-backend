@@ -17,10 +17,10 @@ public class UserLocation {
     private Long id;
 
     @Column(name = "lat")
-    private Double lat;
+    private String lat;
 
     @Column(name = "lng")
-    private Double lng;
+    private String lng;
 
     @OneToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")

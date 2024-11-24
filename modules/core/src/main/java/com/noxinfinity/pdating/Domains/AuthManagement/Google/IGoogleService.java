@@ -1,12 +1,10 @@
 package com.noxinfinity.pdating.Domains.AuthManagement.Google;
 
-import com.noxinfinity.pdate.graphql.types.LoginWithGoogle;
+import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
 
 public interface IGoogleService {
-    Boolean isValidToken(String token) throws Exception;
+    Boolean isValidToken(String token);
+    void checkToken(String token) throws Exception;
     Object getUserData(String token);
-
-    String getEmailUser(String token) throws Exception;
-
-    LoginWithGoogle getUserGoogleByToken(String token) throws Exception;
+    UserFromGoogle getUser(String token) throws Exception;
 }

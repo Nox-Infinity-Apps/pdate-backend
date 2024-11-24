@@ -55,15 +55,6 @@ type UserData {
     pictures : [Pics]
 }
 
-type Major {
-    id : Int
-    name : String
-    iconUrl : String
-}
-type Grade{
-    id : Int
-    name : String
-}
 type Location {
     id : Int
     lat : String

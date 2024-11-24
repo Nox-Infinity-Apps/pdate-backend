@@ -28,7 +28,7 @@ public class MatchMutation {
     public LikeUserResponse like(@InputArgument(name = "targetUserId") String targetUserId, DgsDataFetchingEnvironment dfe) throws UnauthorizedException {
         String token = Base.extractTokenFromDfe(dfe);
         try {
-            return matchServices.like(authServices.getUserFromToken(token).getFcm_id(), targetUserId);
+            return matchServices.like(authServices.loginWithGoogle(token).getUser().getFcm_id(), targetUserId);
         } catch (Exception e) {
             throw new RuntimeException("Error processing like request", e);
         }
@@ -38,7 +38,7 @@ public class MatchMutation {
     public UnLikeUserResponse unlike(@InputArgument(name = "targetUserId") String targetUserId,DgsDataFetchingEnvironment dfe) throws UnauthorizedException {
         String token = Base.extractTokenFromDfe(dfe);
         try {
-            return matchServices.unlike(authServices.getUserFromToken(token).getFcm_id(), targetUserId);
+            return matchServices.unlike(authServices.loginWithGoogle(token).getUser().getFcm_id(), targetUserId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

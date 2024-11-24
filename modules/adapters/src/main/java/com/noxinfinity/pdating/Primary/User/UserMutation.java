@@ -32,7 +32,7 @@ public class UserMutation {
     ) throws UnauthorizedException {
         String token = Base.extractTokenFromDfe(dfe);
         try {
-            return userService.getSuggestedUsers(authServices.getUserFromToken(token).getFcm_id(), currentLat, currentLng, limit, offset);
+            return userService.getSuggestedUsers(authServices.loginWithGoogle(token).getUser().getFcm_id(), currentLat, currentLng, limit, offset);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
