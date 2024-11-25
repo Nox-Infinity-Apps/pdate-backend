@@ -33,5 +33,9 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             @Param("offset") int offset
     );
 
-
+    @Query("SELECT u FROM UserData u JOIN u.datingTargets dt " +
+            "WHERE dt.id = :datingTargetId AND u.userId != :userId")
+    List<UserData> findUsersWithSameDatingTarget(
+            @Param("userId") String userId,
+            @Param("datingTargetId") Long datingTargetId);
 }

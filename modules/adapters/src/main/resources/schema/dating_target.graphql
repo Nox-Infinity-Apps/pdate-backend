@@ -1,0 +1,9 @@
+extend type Query {
+    getListDatingTarget: [DatingTarget]!
+}
+
+type DatingTarget {
+    id: Int
+    title: String
+    iconUrl: String
+}

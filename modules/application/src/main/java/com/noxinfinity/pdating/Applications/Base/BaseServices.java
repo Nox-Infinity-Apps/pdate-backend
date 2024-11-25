@@ -3,6 +3,7 @@ package com.noxinfinity.pdating.Applications.Base;
 import com.noxinfinity.pdating.Entities.UserHobbies;
 import com.noxinfinity.pdating.graphql.types.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,5 +52,13 @@ public class BaseServices {
                         .iconUrl(userHobby.getHobbies().getIconUrl())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public static List<DatingTarget> mapDatingTargets(List<com.noxinfinity.pdating.Entities.DatingTarget> datingTargetList) {
+        List<DatingTarget> datingTargets = new ArrayList<>();
+        for(com.noxinfinity.pdating.Entities.DatingTarget i : datingTargetList) {
+            datingTargets.add(new DatingTarget.Builder().id(Math.toIntExact(i.getId())).title(i.getTitle()).iconUrl(i.getIconUrl()).build());
+        }
+        return datingTargets;
     }
 }

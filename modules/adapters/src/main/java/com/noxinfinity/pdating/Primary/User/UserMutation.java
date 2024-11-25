@@ -6,6 +6,7 @@ import com.noxinfinity.pdating.Applications.User.UserService;
 import com.noxinfinity.pdating.GraphQL.Exception.UnauthorizedException;
 import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
 import com.noxinfinity.pdating.Primary.Base.Base;
+import com.noxinfinity.pdating.graphql.types.AddDatingTargetResponse;
 import com.noxinfinity.pdating.graphql.types.BlockUserResponse;
 import com.noxinfinity.pdating.graphql.types.UserData;
 import com.noxinfinity.pdating.graphql.types.UserSuggest;
@@ -32,7 +33,7 @@ public class UserMutation {
             @InputArgument double currentLng,
             @InputArgument int limit,
             @InputArgument int offset
-    ) throws UnauthorizedException {
+    ) {
         String userId = Base.getUserId();
         try {
             return userService.getSuggestedUsers(userId, currentLat, currentLng, limit, offset);
@@ -43,7 +44,7 @@ public class UserMutation {
 
     @DgsQuery()
     @ValidateToken
-    public List<UserData> blockedUsers() throws UnauthorizedException {
+    public List<UserData> blockedUsers() {
         String userId = Base.getUserId();
         try {
             return userService.listBlockedUsers(userId);
@@ -52,6 +53,20 @@ public class UserMutation {
             throw new RuntimeException(e);
         }
     }
+
+    @DgsQuery()
+    @ValidateToken
+    public List<UserData> datingTargetUsers(
+            @InputArgument int id
+    ) {
+        String userId = Base.getUserId();
+        try {
+            return userService.listDatingTarget(userId, id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @DgsMutation()
     @ValidateToken
@@ -78,4 +93,16 @@ public class UserMutation {
         }
     }
 
+    @DgsMutation
+    @ValidateToken
+    public AddDatingTargetResponse addDatingTarget(
+            @InputArgument int id
+    ) {
+        String userId = Base.getUserId();
+        try {
+            return userService.addDatingTarget(userId, id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -1,25 +1,26 @@
 package com.noxinfinity.pdating.Applications.User;
 
 import com.noxinfinity.pdating.Applications.Base.BaseServices;
+import com.noxinfinity.pdating.Domains.DatingTargetManagement.DatingTargetRepository;
 import com.noxinfinity.pdating.Domains.UserManagement.UserDataRepository;
-import com.noxinfinity.pdating.Entities.Hobbies;
 import com.noxinfinity.pdating.Entities.UserData;
+import com.noxinfinity.pdating.Entities.DatingTarget;
 import com.noxinfinity.pdating.graphql.types.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUser {
     private final UserDataRepository userDataRepository;
+    private final DatingTargetRepository datingTargetRepository;
 
     @Autowired
-    public UserService(UserDataRepository userDataRepository) {
+    public UserService(UserDataRepository userDataRepository, DatingTargetRepository datingTargetRepository) {
         this.userDataRepository = userDataRepository;
+        this.datingTargetRepository = datingTargetRepository;
     }
 
     public List<UserSuggest> getSuggestedUsers(String currentUserId, double currentLat, double currentLng, int limit, int offset) {
@@ -75,10 +76,10 @@ public class UserService implements IUser {
     }
     public BlockUserResponse blockUser(String currentUserId, String blockedUserId) {
         UserData blocker = userDataRepository.findById(currentUserId)
-                .orElseThrow(() ->  new RuntimeException("Internal"));
+                .orElseThrow(() ->  new RuntimeException("Not Found"));
 
         UserData blocked = userDataRepository.findById(blockedUserId)
-                .orElseThrow(() ->  new RuntimeException("Internal"));
+                .orElseThrow(() ->  new RuntimeException("Not Found"));
         blocker.getBlockedUsers().add(blocked);
 
         userDataRepository.save(blocker);
@@ -87,10 +88,10 @@ public class UserService implements IUser {
 
     public BlockUserResponse unblockUser(String currentUserId, String blockedUserId) {
         UserData blocker = userDataRepository.findById(currentUserId)
-                .orElseThrow(() ->  new RuntimeException("Internal"));
+                .orElseThrow(() ->  new RuntimeException("Not Found"));
 
         UserData blocked = userDataRepository.findById(blockedUserId)
-                .orElseThrow(() ->  new RuntimeException("Internal"));
+                .orElseThrow(() ->  new RuntimeException("Not Found"));
         blocker.getBlockedUsers().remove(blocked);
 
         userDataRepository.save(blocker);
@@ -106,4 +107,21 @@ public class UserService implements IUser {
         return blockedUsers;
     }
 
+    public List<com.noxinfinity.pdating.graphql.types.UserData> listDatingTarget(String currentUserId, int id) {
+        List<UserData> datingTarget = userDataRepository.findUsersWithSameDatingTarget(currentUserId, (long)id);
+        List<com.noxinfinity.pdating.graphql.types.UserData> datingTargets = new ArrayList<>();
+        for (UserData blockedUser : datingTarget) {
+            datingTargets.add(BaseServices.graphqlMapper(blockedUser));
+        }
+        return datingTargets;
+    }
+
+    @Override
+    public AddDatingTargetResponse addDatingTarget(String userId, int id) {
+        UserData user = userDataRepository.findById(userId).orElseThrow(() -> new RuntimeException("Internal"));
+        DatingTarget datingTarget = datingTargetRepository.findById((long) id).orElseThrow(() -> new RuntimeException("Not Found"));
+        user.getDatingTargets().add(datingTarget);
+        userDataRepository.save(user);
+        return AddDatingTargetResponse.newBuilder().message("User added").status(StatusEnum.SUCCESS).build();
+    }
 }

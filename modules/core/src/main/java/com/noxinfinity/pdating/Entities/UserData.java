@@ -4,13 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -77,4 +75,13 @@ public class UserData {
 
     @ManyToMany(mappedBy = "blockedUsers")
     private List<UserData> blockedByUsers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_dating_targets",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "fcm_id"),
+            inverseJoinColumns = @JoinColumn(name = "dating_target_id", referencedColumnName = "id")
+    )
+    private List<DatingTarget> datingTargets;
+
 }
