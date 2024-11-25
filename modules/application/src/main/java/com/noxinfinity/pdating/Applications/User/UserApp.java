@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 public class UserApp implements IUserApp {
 
@@ -34,6 +36,36 @@ public class UserApp implements IUserApp {
     public CloudinaryUploadResponse uploadAvatar(String id, MultipartFile file) throws Exception {
         String url = userPicsService.uploadAvatar(id,file);
         return new CloudinaryUploadResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(url).build();
+    }
+
+    @Override
+    public CloudinaryUploadResponse deleteAvatar(String id) throws Exception {
+        String message = userPicsService.deleteAvatar(id);
+        return new CloudinaryUploadResponse.Builder().message(message).status(StatusEnum.SUCCESS).data(message).build();
+    }
+
+    @Override
+    public UserPicsMutationResponse uploadPicture(String id, MultipartFile file) throws Exception {
+        PictureData data = userPicsService.uploadPicture(id,file);
+        return new UserPicsMutationResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();
+    }
+
+    @Override
+    public UserPicsMutationResponse updatePictureById(String id, MultipartFile file, String picId) throws Exception {
+        PictureData data = userPicsService.updatePictureById(id,file,picId);
+        return new UserPicsMutationResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();
+    }
+
+    @Override
+    public UserPicsMutationResponse deletePictureById(String id, String picId) throws Exception {
+        String message = userPicsService.deletePictureById(id,picId);
+        return new UserPicsMutationResponse.Builder().message(message).status(StatusEnum.SUCCESS).build();
+    }
+
+    @Override
+    public UserPicsQueryResponse getUserPics(String id) throws Exception {
+        List<PictureData> data = userPicsService.getUserPics(id);
+        return new UserPicsQueryResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();
     }
 
 }

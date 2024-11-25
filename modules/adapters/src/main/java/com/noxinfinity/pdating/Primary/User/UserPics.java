@@ -1,13 +1,16 @@
 package com.noxinfinity.pdating.Primary.User;
 
+
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import com.noxinfinity.pdating.Applications.User.IUserApp;
 import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
-import com.noxinfinity.pdating.GraphQL.Scalars.UploadScalar;
-import com.noxinfinity.pdating.graphql.types.*;
+import com.noxinfinity.pdating.graphql.types.StatusEnum;
+import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
+import com.noxinfinity.pdating.graphql.types.UserPicsMutationResponse;
+import com.noxinfinity.pdating.graphql.types.UserPicsQueryResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -15,63 +18,63 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 @DgsComponent
-public class User {
+public class UserPics {
     private final IUserApp userApp;
 
     @Autowired
-    public User(IUserApp userApp) {
+    public UserPics(IUserApp userApp) {
         this.userApp = userApp;
     }
 
-    @DgsQuery()
+    @DgsMutation
     @ValidateToken
-    public UserInfoResponse getUserInfo() {
+    public UserPicsMutationResponse uploadPicture(@InputArgument(name = "file") MultipartFile file){
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
             UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.getUserInfoById(decodedToken.getFcm_id());
-        } catch (Exception e) {
-            return new UserInfoFailedResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
-        }
-    }
-
-    @DgsMutation()
-    @ValidateToken
-    public UserInfoResponse updateUserInfo(@InputArgument(name = "input") UpdateUserInfo input){
-        try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.updateUserInfoById(decodedToken.getFcm_id(),input);
+            return userApp.uploadPicture(decodedToken.getFcm_id(),file);
         } catch (Exception e){
-            return new UserInfoFailedResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+            return new UserPicsMutationResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }
     }
 
     @DgsMutation
     @ValidateToken
-    public CloudinaryUploadResponse uploadAvatar(@InputArgument(name = "file") MultipartFile file){
+    public UserPicsMutationResponse updatePictureById(@InputArgument(name = "file") MultipartFile file , @InputArgument(name = "id") String id){
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
             UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.uploadAvatar(decodedToken.getFcm_id(),file);
+            return userApp.updatePictureById(decodedToken.getFcm_id(),file,id);
         } catch (Exception e){
-            return new CloudinaryUploadResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+            return new UserPicsMutationResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }
     }
 
     @DgsMutation
     @ValidateToken
-    public CloudinaryUploadResponse deleteAvatar(){
+    public UserPicsMutationResponse deletePictureById(@InputArgument(name = "id") String id){
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
             UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.deleteAvatar(decodedToken.getFcm_id());
+            return userApp.deletePictureById(decodedToken.getFcm_id(),id);
         } catch (Exception e){
-            return new CloudinaryUploadResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+            return new UserPicsMutationResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+        }
+    }
+
+    @DgsQuery
+    @ValidateToken
+    public UserPicsQueryResponse getUserPics(){
+        try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
+            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
+            return userApp.getUserPics(decodedToken.getFcm_id());
+        } catch (Exception e){
+            return new UserPicsQueryResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }
     }
 }
