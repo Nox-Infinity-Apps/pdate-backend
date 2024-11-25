@@ -1,35 +1,40 @@
 package com.noxinfinity.pdating.Entities;
 
-import com.noxinfinity.pdating.Domains.UserManagement.Users;
-import com.noxinfinity.pdating.Entities.Enums.Conversation_Type;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Getter
 @Setter
+@Getter
+@Entity
 public class Conversations {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="conversation_id")
     private UUID id;
 
-    @Column(name="conversation_type", columnDefinition = "ENUM('M_CHAT', 'WS_CHAT')")
-    @Enumerated(EnumType.STRING)
-    private Conversation_Type type;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_conversations",
-            joinColumns = @JoinColumn(name = "conversation_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<Users> usersInConversation;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Messages> messagesInConversation;
+    private List<UserInConversation> usersInConversation;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 }

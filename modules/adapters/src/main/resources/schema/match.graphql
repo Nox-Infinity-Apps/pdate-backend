@@ -1,0 +1,16 @@
+extend type Mutation {
+    like(targetUserId: String!): LikeUserResponse
+    unlike(targetUserId: String!): UnLikeUserResponse
+}
+
+type LikeUserResponse implements ResponseBase {
+    status: StatusEnum!
+    message: String!
+    isMatched: Int!
+    conversationId: UUID
+}
+
+type UnLikeUserResponse implements ResponseBase{
+    status: StatusEnum!
+    message: String!
+}

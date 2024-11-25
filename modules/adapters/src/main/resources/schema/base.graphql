@@ -1,0 +1,17 @@
+enum StatusEnum {
+    SUCCESS
+    FAILED
+}
+
+interface ResponseBase {
+    status: StatusEnum!
+    message: String!
+}
+
+type Response implements ResponseBase{
+    code: Int!
+    status: StatusEnum!
+    message: String!
+}
+
+

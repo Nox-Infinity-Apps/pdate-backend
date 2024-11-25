@@ -1,8 +1,14 @@
 package com.noxinfinity.pdating.Primary.Base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
+import com.netflix.graphql.dgs.context.DgsContext;
 import com.noxinfinity.pdating.Applications.Base.BaseResponse;
+import com.noxinfinity.pdating.GraphQL.Exception.UnauthorizedException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class Base {
     public static Response<Object> toResponse(BaseResponse baseResponse, Object data) {
@@ -27,6 +33,20 @@ public class Base {
             return "not found";
         }
         return "error";
+    }
+    public static String extractTokenFromDfe(DgsDataFetchingEnvironment dfe) throws UnauthorizedException {
+        HttpHeaders headers = DgsContext.getRequestData(dfe).getHeaders();
+
+        if (headers == null) {
+            throw new UnauthorizedException("Request context is missing");
+        }
+
+        String authHeader = headers.getFirst("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new UnauthorizedException("Unauthorized: Missing or invalid Authorization header");
+        }
+
+        return authHeader.substring(7);
     }
 }
 

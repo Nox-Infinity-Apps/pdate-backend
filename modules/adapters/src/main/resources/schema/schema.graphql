@@ -1,0 +1,24 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    helloWorld(input: HelloWorldInput): String
+    byebyeWorld(isByebye: Boolean, message: String): String
+    getAllHobbies :HobbiesResponse!
+}
+type HobbiesResponse implements ResponseBase{
+    message: String!
+    status: StatusEnum!
+    data: [Hobbies]
+}
+type Mutation{
+
+}
+
+
+input HelloWorldInput{
+    name: String
+}
+

@@ -2,47 +2,60 @@ package com.noxinfinity.pdating.Primary.Auth;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsMutation;
+import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
+import com.noxinfinity.pdating.graphql.types.LoginWithGoogle;
 import com.netflix.graphql.dgs.InputArgument;
-import com.netflix.graphql.dgs.context.DgsContext;
-import com.noxinfinity.pdating.Applications.Auth.ApplicationService.AuthApplicationService;
-import com.noxinfinity.pdating.Applications.Auth.Dto.ChangePassword.ChangePasswordRequest;
-import com.noxinfinity.pdating.Applications.Auth.Dto.ChangePassword.ChangePasswordResponse;
-import com.noxinfinity.pdating.Applications.Auth.Dto.ChangePassword.ChangePasswordResponseData;
-import com.noxinfinity.pdating.Applications.Auth.Dto.Login.LoginRequest;
-import com.noxinfinity.pdating.Applications.Auth.Dto.Login.LoginResponse;
-import com.noxinfinity.pdating.Applications.Auth.Dto.Login.LoginResponseData;
-import com.noxinfinity.pdating.Applications.Auth.Dto.Register.RegisterRequest;
-import com.noxinfinity.pdating.Applications.Auth.Dto.Register.RegisterResponse;
-import com.noxinfinity.pdating.Applications.Auth.Dto.Register.RegisterResponseData;
-import com.noxinfinity.pdating.Primary.Base.Base;
-import com.noxinfinity.pdating.Primary.Base.Response;
-import graphql.schema.DataFetchingEnvironment;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.noxinfinity.pdating.graphql.types.LoginByGoogleResponse;
+import com.noxinfinity.pdating.graphql.types.StatusEnum;
+import com.noxinfinity.pdating.Applications.Auth.IAuth;
+import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @DgsComponent
 public class AuthMutation {
-    private final AuthApplicationService authApplicationService;
+    private final IAuth authService;
     @Autowired
-    public AuthMutation(AuthApplicationService authApplicationService) {
-        this.authApplicationService = authApplicationService;
+    public AuthMutation(IAuth authService){
+        this.authService = authService;
     }
 
-    @DgsMutation
-    public Response<Object> login(@InputArgument LoginRequest loginRequest) {
-        LoginResponse response = authApplicationService.login(loginRequest);
-        return Base.toResponse(response,new LoginResponseData(response));
+    @DgsMutation()
+    public LoginByGoogleResponse loginByGoogle(@InputArgument(name = "token") String token) throws Exception {
+        try {
+            LoginWithGoogle response = authService.loginWithGoogle(token);
+            return new LoginByGoogleResponse
+                    .Builder()
+                    .message("Success")
+                    .status(StatusEnum.SUCCESS)
+                    .accessToken(response.getAccessToken())
+                    .user(response.getUser())
+                    .isNew(response.getIsNew())
+                    .build();
+        }catch (Exception e){
+            return new LoginByGoogleResponse
+                    .Builder()
+                    .message(e.getMessage())
+                    .status(StatusEnum.FAILED)
+                    .accessToken("")
+                    .isNew(false)
+                    .build();
+        }
     }
 
-    @DgsMutation
-    public Response<Object> register(@InputArgument RegisterRequest registerRequest) {
-        RegisterResponse response = authApplicationService.register(registerRequest);
-        return Base.toResponse(response,new RegisterResponseData(response));
+    @DgsMutation()
+    @ValidateToken
+    public String loginByApple(@InputArgument(name = "token") String token) {
+        try{
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
+            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
+            return decodedToken.getEmail();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
-    @DgsMutation
-    public Response<Object> changePassword(@InputArgument ChangePasswordRequest changePasswordRequest, DataFetchingEnvironment dfe) {
-        ChangePasswordResponse response = authApplicationService.changePassword(changePasswordRequest, dfe);
-        return Base.toResponse(response,new ChangePasswordResponseData(response));
-    }
 }

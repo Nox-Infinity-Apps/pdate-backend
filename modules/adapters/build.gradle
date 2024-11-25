@@ -1,9 +1,18 @@
+buildscript {
+    dependencies{
+        classpath 'com.netflix.graphql.dgs.codegen:graphql-dgs-codegen-gradle:6.2.1'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
-    id 'com.netflix.dgs.codegen'
+    id "io.sentry.jvm.gradle" version "4.13.0"
 }
+
+
+
 
 group = 'com.noxinfinity.pdating'
 version = '0.0.1-SNAPSHOT'
@@ -37,7 +46,7 @@ dependencies {
     implementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter"
     testImplementation "com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test"
     implementation("name.nkonev.multipart-spring-graphql:multipart-spring-graphql:1.4.1")
-
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation project(':modules:application')
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
      implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:14.0.0'

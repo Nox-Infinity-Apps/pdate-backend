@@ -1,25 +1,32 @@
 package com.noxinfinity.pdating.Entities;
 
-import com.noxinfinity.pdating.Domains.UserManagement.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 
 @Getter
+@Setter
 @Entity
+@Accessors(chain = true)
 public class UserMatched {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user", nullable = false)
-    private Users user;
+    @JoinColumn(name = "user1", referencedColumnName = "fcm_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private UserData user1;
 
     @ManyToOne
-    @JoinColumn(name = "matched_user", nullable = false)
-    private Users matchedUser;
+    @JoinColumn(name = "user2", referencedColumnName = "fcm_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private UserData user2;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
