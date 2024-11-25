@@ -66,4 +66,15 @@ public class UserData {
 
     @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPics> userPics;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_blocks",
+            joinColumns = @JoinColumn(name = "blocker_id", referencedColumnName = "fcm_id"),
+            inverseJoinColumns = @JoinColumn(name = "blocked_id", referencedColumnName = "fcm_id")
+    )
+    private List<UserData> blockedUsers;
+
+    @ManyToMany(mappedBy = "blockedUsers")
+    private List<UserData> blockedByUsers;
 }

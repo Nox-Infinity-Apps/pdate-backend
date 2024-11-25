@@ -6,6 +6,7 @@ import com.netflix.graphql.dgs.DgsMutation;
 import com.netflix.graphql.dgs.InputArgument;
 import com.noxinfinity.pdating.Applications.Auth.AuthServices;
 import com.noxinfinity.pdating.GraphQL.Exception.UnauthorizedException;
+import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
 import com.noxinfinity.pdating.Primary.Base.Base;
 import com.noxinfinity.pdating.graphql.types.LikeUserResponse;
 import com.noxinfinity.pdating.graphql.types.UnLikeUserResponse;
@@ -25,20 +26,22 @@ public class MatchMutation {
     }
 
     @DgsMutation()
-    public LikeUserResponse like(@InputArgument(name = "targetUserId") String targetUserId, DgsDataFetchingEnvironment dfe) throws UnauthorizedException {
-        String token = Base.extractTokenFromDfe(dfe);
+    @ValidateToken
+    public LikeUserResponse like(@InputArgument(name = "targetUserId") String targetUserId) throws UnauthorizedException {
+        String userId = Base.getUserId();
         try {
-            return matchServices.like(authServices.loginWithGoogle(token).getUser().getFcm_id(), targetUserId);
+            return matchServices.like(userId, targetUserId);
         } catch (Exception e) {
             throw new RuntimeException("Error processing like request", e);
         }
     }
 
     @DgsMutation()
-    public UnLikeUserResponse unlike(@InputArgument(name = "targetUserId") String targetUserId,DgsDataFetchingEnvironment dfe) throws UnauthorizedException {
-        String token = Base.extractTokenFromDfe(dfe);
+    @ValidateToken
+    public UnLikeUserResponse unlike(@InputArgument(name = "targetUserId") String targetUserId) throws UnauthorizedException {
+        String userId = Base.getUserId();
         try {
-            return matchServices.unlike(authServices.loginWithGoogle(token).getUser().getFcm_id(), targetUserId);
+            return matchServices.unlike(userId, targetUserId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

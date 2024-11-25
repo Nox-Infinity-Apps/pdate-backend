@@ -1,14 +1,12 @@
 package com.noxinfinity.pdating.Primary.Base;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
-import com.netflix.graphql.dgs.context.DgsContext;
 import com.noxinfinity.pdating.Applications.Base.BaseResponse;
 import com.noxinfinity.pdating.GraphQL.Exception.UnauthorizedException;
-import org.springframework.http.HttpHeaders;
+import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class Base {
     public static Response<Object> toResponse(BaseResponse baseResponse, Object data) {
@@ -34,19 +32,13 @@ public class Base {
         }
         return "error";
     }
-    public static String extractTokenFromDfe(DgsDataFetchingEnvironment dfe) throws UnauthorizedException {
-        HttpHeaders headers = DgsContext.getRequestData(dfe).getHeaders();
-
-        if (headers == null) {
-            throw new UnauthorizedException("Request context is missing");
-        }
-
-        String authHeader = headers.getFirst("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new UnauthorizedException("Unauthorized: Missing or invalid Authorization header");
-        }
-
-        return authHeader.substring(7);
+    public static String getUserId() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
+        return decodedToken.getFcm_id();
     }
+
+
 }
 
