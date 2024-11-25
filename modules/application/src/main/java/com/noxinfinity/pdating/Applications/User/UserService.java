@@ -1,11 +1,10 @@
 package com.noxinfinity.pdating.Applications.User;
 
+import com.noxinfinity.pdating.Applications.Base.BaseServices;
 import com.noxinfinity.pdating.Domains.UserManagement.UserDataRepository;
 import com.noxinfinity.pdating.Entities.Hobbies;
-import com.noxinfinity.pdating.graphql.types.Grade;
-import com.noxinfinity.pdating.graphql.types.Hobbie;
-import com.noxinfinity.pdating.graphql.types.Major;
-import com.noxinfinity.pdating.graphql.types.UserSuggest;
+import com.noxinfinity.pdating.Entities.UserData;
+import com.noxinfinity.pdating.graphql.types.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +72,38 @@ public class UserService implements IUser {
         }
 
         return suggestedUsers;
+    }
+    public BlockUserResponse blockUser(String currentUserId, String blockedUserId) {
+        UserData blocker = userDataRepository.findById(currentUserId)
+                .orElseThrow(() ->  new RuntimeException("Internal"));
+
+        UserData blocked = userDataRepository.findById(blockedUserId)
+                .orElseThrow(() ->  new RuntimeException("Internal"));
+        blocker.getBlockedUsers().add(blocked);
+
+        userDataRepository.save(blocker);
+        return BlockUserResponse.newBuilder().message("User blocked").status(StatusEnum.SUCCESS).build();
+    }
+
+    public BlockUserResponse unblockUser(String currentUserId, String blockedUserId) {
+        UserData blocker = userDataRepository.findById(currentUserId)
+                .orElseThrow(() ->  new RuntimeException("Internal"));
+
+        UserData blocked = userDataRepository.findById(blockedUserId)
+                .orElseThrow(() ->  new RuntimeException("Internal"));
+        blocker.getBlockedUsers().remove(blocked);
+
+        userDataRepository.save(blocker);
+        return BlockUserResponse.newBuilder().message("User unblocked").status(StatusEnum.SUCCESS).build();
+    }
+
+    public List<com.noxinfinity.pdating.graphql.types.UserData> listBlockedUsers(String currentUserId) {
+        UserData blocker = userDataRepository.findById(currentUserId).orElseThrow(() -> new RuntimeException("Internal"));
+        List<com.noxinfinity.pdating.graphql.types.UserData> blockedUsers = new ArrayList<>();
+        for (UserData blockedUser : blocker.getBlockedUsers()) {
+            blockedUsers.add(BaseServices.graphqlMapper(blockedUser));
+        }
+        return blockedUsers;
     }
 
 }

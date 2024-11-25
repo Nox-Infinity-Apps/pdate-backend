@@ -32,4 +32,6 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             @Param("limit") int limit,
             @Param("offset") int offset
     );
+
+
 }

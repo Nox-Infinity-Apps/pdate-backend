@@ -1,10 +1,13 @@
 extend type Query {
     getUserInfo: UserInfoResponse!
     suggestedUsers(currentLat: Float!, currentLng: Float!, limit: Int, offset: Int): [UserSuggest]
+    blockedUsers: [UserData]
 }
 
 extend type Mutation {
     updateUserInfo(input: UpdateUserInfo): UserInfoResponse!
+    blockUser(blockedUserId: String!): BlockUserResponse!
+    unblockUser(blockedUserId: String!): BlockUserResponse!
 }
 
 input UpdateUserInfo {
@@ -104,3 +107,9 @@ type Hobbie {
     title: String
     iconUrl: String
 }
+
+type BlockUserResponse implements ResponseBase {
+    status: StatusEnum!
+    message: String!
+}
+
