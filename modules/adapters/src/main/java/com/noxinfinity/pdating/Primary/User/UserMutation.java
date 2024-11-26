@@ -30,12 +30,14 @@ public class UserMutation {
     public List<UserSuggest> suggestedUsers(
             @InputArgument double currentLat,
             @InputArgument double currentLng,
-            @InputArgument int limit,
-            @InputArgument int offset
-    ) throws UnauthorizedException {
+            @InputArgument Integer offset
+    ) {
         String userId = Base.getUserId();
         try {
-            return userService.getSuggestedUsers(userId, currentLat, currentLng, limit, offset);
+            if (offset == null) {
+                offset = 0;
+            }
+            return userService.getSuggestedUsers(userId, currentLat, currentLng, offset);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -43,12 +45,28 @@ public class UserMutation {
 
     @DgsQuery()
     @ValidateToken
-    public List<UserData> blockedUsers() throws UnauthorizedException {
+    public List<UserData> blockedUsers(){
         String userId = Base.getUserId();
         try {
             return userService.listBlockedUsers(userId);
 
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DgsQuery()
+    @ValidateToken
+    public List<UserSuggest> suggestedUsersWithFilter(
+            @InputArgument double currentLat,
+            @InputArgument double currentLng,
+            @InputArgument Integer offset,
+            @InputArgument Integer categoryId
+    ){
+        String userId = Base.getUserId();
+        try {
+            return userService.getSuggestedUsersWithFilter(userId, currentLat, currentLng, offset, categoryId);
+        } catch (Exception e){
             throw new RuntimeException(e);
         }
     }

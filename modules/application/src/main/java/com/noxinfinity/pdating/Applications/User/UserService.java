@@ -1,7 +1,9 @@
 package com.noxinfinity.pdating.Applications.User;
 
 import com.noxinfinity.pdating.Applications.Base.BaseServices;
+import com.noxinfinity.pdating.Domains.CategoryManagement.CategoryRepository;
 import com.noxinfinity.pdating.Domains.UserManagement.UserDataRepository;
+import com.noxinfinity.pdating.Entities.Enums.Category;
 import com.noxinfinity.pdating.Entities.Hobbies;
 import com.noxinfinity.pdating.Entities.UserData;
 import com.noxinfinity.pdating.graphql.types.*;
@@ -16,62 +18,17 @@ import java.util.stream.Collectors;
 @Service
 public class UserService implements IUser {
     private final UserDataRepository userDataRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public UserService(UserDataRepository userDataRepository) {
+    public UserService(UserDataRepository userDataRepository, CategoryRepository categoryRepository) {
         this.userDataRepository = userDataRepository;
+        this.categoryRepository = categoryRepository;
     }
 
-    public List<UserSuggest> getSuggestedUsers(String currentUserId, double currentLat, double currentLng, int limit, int offset) {
-        List<Object[]> results = userDataRepository.findSuggestedUsers(currentUserId, currentLat, currentLng, limit, offset);
-        List<UserSuggest> suggestedUsers = new ArrayList<>();
+    public List<UserSuggest> getSuggestedUsers(String currentUserId, double currentLat, double currentLng, int offset) {
+        return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsers(currentUserId, currentLat, currentLng, offset * 10));
 
-        for (Object[] result : results) {
-            UserSuggest user = new UserSuggest();
-
-            user.setFcmId((String) result[0]);
-            user.setFullName((String) result[1]);
-            user.setDob(result[2] != null ? result[2].toString() : null);
-            user.setAvatarUrl((String) result[3]);
-
-            // Ánh xạ Grade
-            Grade grade = new Grade();
-            grade.setId(result[4] != null ? ((Number) result[4]).intValue() : null);
-            grade.setName((String) result[5]);
-            user.setGrade(grade);
-
-            // Ánh xạ Major
-            Major major = new Major();
-            major.setId(result[6] != null ? ((Number) result[6]).intValue() : null);
-            major.setName((String) result[7]);
-            major.setIconUrl((String) result[8]);
-            user.setMajor(major);
-
-            user.setBio((String) result[9]);
-            user.setDistance(result[10] != null ? ((Number) result[10]).intValue() : null);
-
-            // Ánh xạ commonHobbies từ chuỗi thành List<Hobbie>
-            String hobbiesString = (String) result[11];
-            List<Hobbie> commonHobbies = new ArrayList<>();
-            if (hobbiesString != null) {
-                String[] hobbiesArray = hobbiesString.split("\\|");
-                for (String hobbyStr : hobbiesArray) {
-                    String[] hobbyDetails = hobbyStr.split(":");
-                    if (hobbyDetails.length == 4) {
-                        Hobbie hobby = new Hobbie();
-                        hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
-                        hobby.setTitle(hobbyDetails[1].trim());
-                        hobby.setIconUrl(hobbyDetails[2] + hobbyDetails[3].trim());
-                        commonHobbies.add(hobby);
-                    }
-                }
-            }
-            user.setCommonHobbies(commonHobbies);
-
-            suggestedUsers.add(user);
-        }
-
-        return suggestedUsers;
     }
     public BlockUserResponse blockUser(String currentUserId, String blockedUserId) {
         UserData blocker = userDataRepository.findById(currentUserId)
@@ -106,4 +63,17 @@ public class UserService implements IUser {
         return blockedUsers;
     }
 
+    @Override
+    public List<UserSuggest> getSuggestedUsersWithFilter(String userId, double currentLat, double currentLng, Integer offset, Integer categoryId) {
+        Category category = categoryRepository.findById((long) categoryId).orElseThrow(() -> new RuntimeException("Not Found"));
+        UserData user = userDataRepository.findById(userId).orElseThrow(() -> new RuntimeException("Internal"));
+        if (category.getField().equals("purpose")){
+            return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsersByPurpose(userId, currentLat, currentLng, offset * 10, category.getLabel()));
+        }
+        if (category.getField().equals("major")){
+
+            return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsersByMajor(userId, currentLat, currentLng, offset * 10, user.getMajor().getId()));
+        }
+        return null;
+    }
 }

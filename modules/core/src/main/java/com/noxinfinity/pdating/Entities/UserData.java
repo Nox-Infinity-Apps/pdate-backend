@@ -77,4 +77,12 @@ public class UserData {
 
     @ManyToMany(mappedBy = "blockedUsers")
     private List<UserData> blockedByUsers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_purposes",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "fcm_id"),
+            inverseJoinColumns = @JoinColumn(name = "purpose_id", referencedColumnName = "id")
+    )
+    private List<Purpose> purposes;
 }
