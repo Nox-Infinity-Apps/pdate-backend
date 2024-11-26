@@ -1,6 +1,9 @@
 package com.noxinfinity.pdating.Applications.User;
-
-import com.noxinfinity.pdating.graphql.types.*;
+import com.noxinfinity.pdating.graphql.types.CloudinaryUploadResponse;
+import com.noxinfinity.pdating.graphql.types.UserPicsMutationResponse;
+import com.noxinfinity.pdating.graphql.types.UserPicsQueryResponse;
+import com.noxinfinity.pdating.graphql.types.UserInfoSuccessResponse;
+import com.noxinfinity.pdating.graphql.types.UpdateUserInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IUserApp {

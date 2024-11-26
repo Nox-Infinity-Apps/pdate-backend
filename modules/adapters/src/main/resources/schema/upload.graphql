@@ -43,5 +43,5 @@ type UserPicsMutationResponse implements ResponseBase{
 type UserPicsQueryResponse implements ResponseBase{
     message: String!
     status: StatusEnum!
-    data: [PictureData]
+    data: [PictureData]!
 }
