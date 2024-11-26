@@ -56,6 +56,17 @@ services:
       MYSQL_USER: amila_one
       MYSQL_PASSWORD: Amila_pw
       MYSQL_ROOT_PASSWORD: Amila_Rpw
+
+  phpmyadmin:
+    container_name: pam
+    image: phpmyadmin
+    ports:
+      - "1111:80"
+    networks:
+      - pdate
+    environment:
+      - PMA_HOST=mysqldb
+
 networks:
   pdate:
 
