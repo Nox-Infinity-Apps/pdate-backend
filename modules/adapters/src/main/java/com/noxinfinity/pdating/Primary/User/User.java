@@ -6,12 +6,9 @@ import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import com.noxinfinity.pdating.Applications.User.IUserApp;
 import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
-import com.noxinfinity.pdating.GraphQL.Scalars.UploadScalar;
+import com.noxinfinity.pdating.Primary.Base.Base;
 import com.noxinfinity.pdating.graphql.types.*;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 @DgsComponent
@@ -27,10 +24,8 @@ public class User {
     @ValidateToken
     public UserInfoResponse getUserInfo() {
         try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.getUserInfoById(decodedToken.getFcm_id());
+            String userId = Base.getUserId();
+            return userApp.getUserInfoById(userId);
         } catch (Exception e) {
             return new UserInfoFailedResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }
@@ -40,10 +35,8 @@ public class User {
     @ValidateToken
     public UserInfoResponse updateUserInfo(@InputArgument(name = "input") UpdateUserInfo input){
         try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.updateUserInfoById(decodedToken.getFcm_id(),input);
+            String userId = Base.getUserId();
+            return userApp.updateUserInfoById(userId,input);
         } catch (Exception e){
             return new UserInfoFailedResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }
@@ -51,12 +44,32 @@ public class User {
 
     @DgsMutation
     @ValidateToken
+    public UserInfoSuccessResponse updateFcmTokenAndLocation(@InputArgument(name = "input") UpdateFcmTokenAndLocation input){
+        try {
+            String userId = Base.getUserId();
+            return userApp.updateFcmTokenAndLocation(userId,input);
+        } catch (Exception e){
+            return new UserInfoSuccessResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+        }
+    }
+
+    @DgsMutation
+    @ValidateToken
     public CloudinaryUploadResponse uploadAvatar(@InputArgument(name = "file") MultipartFile file){
         try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-            UserFromGoogle decodedToken = (UserFromGoogle) request.getAttribute("decodedToken");
-            return userApp.uploadAvatar(decodedToken.getFcm_id(),file);
+            String userId = Base.getUserId();
+            return userApp.uploadAvatar(userId,file);
+        } catch (Exception e){
+            return new CloudinaryUploadResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
+        }
+    }
+
+    @DgsMutation
+    @ValidateToken
+    public CloudinaryUploadResponse deleteAvatar(){
+        try {
+            String userId = Base.getUserId();
+            return userApp.deleteAvatar(userId);
         } catch (Exception e){
             return new CloudinaryUploadResponse.Builder().message(e.getMessage()).status(StatusEnum.FAILED).build();
         }

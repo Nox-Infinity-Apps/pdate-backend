@@ -4,6 +4,14 @@ extend type Mutation  {
     uploadScriptWithMultipartPOST(file: Upload!): CloudinaryUploadResponse!
     uploadFileScriptWithMultipartPOST(file: Upload!): CloudinaryUploadResponse!
     uploadAvatar(file: Upload!): CloudinaryUploadResponse!
+    deleteAvatar: CloudinaryUploadResponse!
+
+    uploadPicture(file: Upload!): UserPicsMutationResponse!
+    updatePictureById(id: String!, file: Upload!): UserPicsMutationResponse!
+    deletePictureById(id: String!): UserPicsMutationResponse!
+}
+extend type Query {
+    getUserPics: UserPicsQueryResponse!
 }
 
 type CloudinaryUploadResult {
@@ -17,9 +25,23 @@ type CloudinaryUploadResult {
     originalFilename: String!
     signature: String!
 }
+type PictureData {
+    url: String!
+    id: String!
+}
 
 type CloudinaryUploadResponse implements ResponseBase{
     message: String!
     status: StatusEnum!
     data: String
+}
+type UserPicsMutationResponse implements ResponseBase{
+    message: String!
+    status: StatusEnum!
+    data: PictureData
+}
+type UserPicsQueryResponse implements ResponseBase{
+    message: String!
+    status: StatusEnum!
+    data: [PictureData]!
 }
