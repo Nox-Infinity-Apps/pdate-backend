@@ -8,6 +8,7 @@ extend type Mutation {
     updateUserInfo(input: UpdateUserInfo): UserInfoResponse!
     blockUser(blockedUserId: String!): BlockUserResponse!
     unblockUser(blockedUserId: String!): BlockUserResponse!
+    updateFcmTokenAndLocation(input: UpdateFcmTokenAndLocation!): UserInfoSuccessResponse!
 }
 
 input UpdateUserInfo {
@@ -111,5 +112,10 @@ type Hobbie {
 type BlockUserResponse implements ResponseBase {
     status: StatusEnum!
     message: String!
+}
+
+input UpdateFcmTokenAndLocation {
+    fcmNotificationToken: String
+    location: LocationUser
 }
 

@@ -45,6 +45,12 @@ public class UserApp implements IUserApp {
     }
 
     @Override
+    public UserInfoSuccessResponse updateFcmTokenAndLocation(String id, UpdateFcmTokenAndLocation input) throws Exception {
+        UserData userData = userDataService.updateFcmTokenAndLocation(id,input);
+        return new UserInfoSuccessResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(userData).build();
+    }
+
+    @Override
     public UserPicsMutationResponse uploadPicture(String id, MultipartFile file) throws Exception {
         PictureData data = userPicsService.uploadPicture(id,file);
         return new UserPicsMutationResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();

@@ -8,6 +8,7 @@ import com.noxinfinity.pdating.Repository.Auth.IAuthRespository;
 import com.noxinfinity.pdating.Repository.Other.IGradeRespository;
 import com.noxinfinity.pdating.Repository.Other.IHobbiesRespository;
 import com.noxinfinity.pdating.Repository.Other.IMajorRespository;
+import com.noxinfinity.pdating.Repository.Other.IUserLocationRepository;
 import com.noxinfinity.pdating.Repository.UserData.IUserDataRepository;
 import com.noxinfinity.pdating.ThirdServices.StreamChat;
 import com.noxinfinity.pdating.graphql.types.*;
@@ -26,6 +27,7 @@ public class UserDataService implements IUserDataService {
     private final IGradeRespository _grade;
     private final IMajorRespository _major;
     private final IHobbiesRespository _hobbies;
+    private final IUserLocationRepository _location;
 
 
     @Autowired
@@ -34,12 +36,14 @@ public class UserDataService implements IUserDataService {
                            IGradeRespository gradeRespository ,
                            IMajorRespository majorRespository,
                            IHobbiesRespository hobbiesRespository,
+                            IUserLocationRepository locationRepository,
                            StreamChat streamChat) {
         this._user = userDataRepository;
         this._auth = authRepository;
         this._grade = gradeRespository;
         this._major = majorRespository;
         this._hobbies = hobbiesRespository;
+        this._location = locationRepository;
     }
     public Boolean createOrUpdateUserDataFromGoogleReturnIsNew(UserFromGoogle user)  {
         //Tìm xem user đã tồn tại chưa
@@ -134,8 +138,8 @@ public class UserDataService implements IUserDataService {
             user.setBio(body.getBio());
             user.setDob(new SimpleDateFormat("dd/MM/yyyy").parse(body.getDob()));
             user.setFullName(body.getFullName());
-            user.setGrade(_grade.findById(Long.valueOf(body.getGrade())).orElse(null));
-            user.setMajor(_major.findById(Long.valueOf(body.getMajor())).orElse(null));
+            if(body.getGrade() != null) user.setGrade(_grade.findById(Long.valueOf(body.getGrade())).orElse(null));
+            if(body.getMajor() != null) user.setMajor(_major.findById(Long.valueOf(body.getMajor())).orElse(null));
 
             // Cập nhật Auth
             Auth auth = user.getAuth();
@@ -144,34 +148,42 @@ public class UserDataService implements IUserDataService {
             auth.setProvider(AuthProvider.valueOf(body.getProvider().toUpperCase()));
             _auth.save(auth);
 
-            // Cập nhật Location
-            UserLocation location = new UserLocation();
-            location.setLat(body.getLocation().getLat());
-            location.setLng(body.getLocation().getLng());
-            user.setLocation(location);
-
-            // Cập nhật Hobbies
-            List<Long> hobbyIds = body.getHobbies().stream()
-                    .map(Integer::longValue)
-                    .toList();; // Danh sách id từ body
-            List<Hobbies> hobbiesFromDb = _hobbies.findAllById(hobbyIds); // Lấy danh sách hobbies từ DB
-            if (hobbiesFromDb.size() != hobbyIds.size()) {
-                throw new Exception("Sở thích không tồn tại trong danh sách.");
+            if(body.getLocation() != null){
+                // Cập nhật Location
+                UserLocation location = user.getLocation();
+                if (location == null) {
+                    location = new UserLocation();
+                }
+                location.setLat(body.getLocation().getLat());
+                location.setLng(body.getLocation().getLng());
+                location.setUserData(user);
+                user.setLocation(location);
             }
 
-            // Xóa các hobbies cũ
-            List<UserHobbies> currentHobbies = user.getHobbies();
-            currentHobbies.clear();
+            if(body.getHobbies() != null){
+                // Cập nhật Hobbies
+                List<Long> hobbyIds = body.getHobbies().stream()
+                        .map(Integer::longValue)
+                        .toList();; // Danh sách id từ body
+                List<Hobbies> hobbiesFromDb = _hobbies.findAllById(hobbyIds); // Lấy danh sách hobbies từ DB
+                if (hobbiesFromDb.size() != hobbyIds.size()) {
+                    throw new Exception("Sở thích không tồn tại trong danh sách.");
+                }
 
-            // Thêm hobbies mới
-            for (Hobbies hobby : hobbiesFromDb) {
-                UserHobbies userHobby = new UserHobbies();
-                userHobby.setUserData(user);
-                userHobby.setHobbies(hobby);
-                currentHobbies.add(userHobby);
+                // Xóa các hobbies cũ
+                List<UserHobbies> currentHobbies = user.getHobbies();
+                currentHobbies.clear();
+
+                // Thêm hobbies mới
+                for (Hobbies hobby : hobbiesFromDb) {
+                    UserHobbies userHobby = new UserHobbies();
+                    userHobby.setUserData(user);
+                    userHobby.setHobbies(hobby);
+                    currentHobbies.add(userHobby);
+                }
+
+                user.setHobbies(currentHobbies);
             }
-
-            user.setHobbies(currentHobbies);
 
             // Lưu UserData
             _user.save(user);
@@ -179,6 +191,35 @@ public class UserDataService implements IUserDataService {
         }
     }
 
+    @Override
+    public com.noxinfinity.pdating.graphql.types.UserData updateFcmTokenAndLocation(String id, UpdateFcmTokenAndLocation input) throws Exception {
+        com.noxinfinity.pdating.graphql.types.UserData userData = new com.noxinfinity.pdating.graphql.types.UserData();
+        UserData user = _user.findById(id).orElse(null);
+        if (user == null) {
+            throw new Exception("Không tồn tại user");
+        } else {
+            if(input.getFcmNotificationToken() != null){
+                // Cập nhật Auth
+                Auth auth = user.getAuth();
+                auth.setFcmNotificationToken(input.getFcmNotificationToken());
+                _auth.save(auth);
+            }
+            if(input.getLocation() != null){
+                // Cập nhật Location
+                UserLocation location = user.getLocation();
+                if (location == null) {
+                    location = new UserLocation();
+                }
+                location.setLat(input.getLocation().getLat());
+                location.setLng(input.getLocation().getLng());
+                location.setUserData(user);
+                user.setLocation(location);
+            }
+            // Lưu UserData
+            _user.save(user);
+            return null;
+        }
+    }
 
 
     private List<com.noxinfinity.pdating.graphql.types.Hobbies> mapUserHobbiesToHobbies(List<UserHobbies> userHobbiesList) {
