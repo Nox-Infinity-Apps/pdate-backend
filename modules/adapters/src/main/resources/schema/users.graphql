@@ -80,18 +80,14 @@ type Likes{
     targetUserId : String
 }
 
-enum Gender {
-    MALE,
-    FEMALE,
-    OTHER
-}
+
 
 type UserSuggest {
     fcmId: String!
     fullName: String
     dob: String
     avatarUrl: String
-    gender: Gender
+    gender: Gender!
     grade: Grade
     major: Major
     bio: String
@@ -99,7 +95,6 @@ type UserSuggest {
     commonHobbies: [Hobbie]
     purpose: [String]
     pictures: [String]
-    gender: Gender!
 }
 
 type Grade {
@@ -130,6 +125,7 @@ input UpdateFcmTokenAndLocation {
 }
 
 enum Gender {
-    Male,
-    Female
+    MALE,
+    FEMALE,
+    OTHER
 }

@@ -78,8 +78,7 @@ public class BaseServices {
 
             // Ánh xạ Gender
             if (result[4] != null) {
-                byte genderValue = ((Number) result[4]).byteValue(); // Chuyển kiểu dữ liệu sang Byte
-                user.setGender(Gender.values()[genderValue]); // Sử dụng thứ tự của enum để ánh xạ
+                user.setGender(Gender.valueOf(result[4].toString()));
             }
 
             // Ánh xạ Grade

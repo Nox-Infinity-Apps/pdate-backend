@@ -1,6 +1,5 @@
 package com.noxinfinity.pdating.Entities;
 
-import com.noxinfinity.pdating.Entities.Enums.AuthProvider;
 import com.noxinfinity.pdating.Entities.Enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,10 +34,6 @@ public class UserData {
     @Column(name = "public_avatar_id")
     private String publicAvataId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", columnDefinition = "ENUM('FEMALE','MALE','OTHER') DEFAULT 'OTHER'")
-    private Gender gender;
-
     @ManyToOne
     @JoinColumn(name = "grade_id", referencedColumnName = "id")
     private Grades grade;
@@ -50,7 +45,11 @@ public class UserData {
     @Column(name = "bio")
     private String bio;
 
-    @Column(name = "is_activated")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", columnDefinition = "ENUM('FEMALE', 'MALE', 'OTHER') DEFAULT 'OTHER'")
+    private Gender gender;
+
+    @Column(name = "is_activated", columnDefinition = "DEFAULT 0")
     private Integer isActivated;
 
     @Column(name = "updated_at")
@@ -58,6 +57,9 @@ public class UserData {
 
     @Column(name = "created_at")
     private Date createdAt;
+
+    @Column(name = "is_verified", columnDefinition = "DEFAULT false")
+    private boolean isVerified;
 
     @OneToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")
