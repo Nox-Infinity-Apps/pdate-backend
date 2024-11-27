@@ -85,17 +85,20 @@ type Likes{
 }
 
 
+
 type UserSuggest {
     fcmId: String!
     fullName: String
     dob: String
     avatarUrl: String
+    gender: Gender!
     grade: Grade
     major: Major
     bio: String
     distance: Int
     commonHobbies: [Hobbie]
     purpose: [String]
+    pictures: [String]
 }
 
 type Grade {
@@ -135,3 +138,8 @@ type GetAllPurposeResponse implements ResponseBase{
     data: [PurposeResponse]
 }
 
+enum Gender {
+    MALE,
+    FEMALE,
+    OTHER
+}

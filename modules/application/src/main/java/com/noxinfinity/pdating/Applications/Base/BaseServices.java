@@ -76,46 +76,58 @@ public class BaseServices {
             user.setDob(result[2] != null ? result[2].toString() : null);
             user.setAvatarUrl((String) result[3]);
 
+            // Ánh xạ Gender
+            if (result[4] != null) {
+                user.setGender(Gender.valueOf(result[4].toString()));
+            }
+
             // Ánh xạ Grade
             Grade grade = new Grade();
-            grade.setId(result[4] != null ? ((Number) result[4]).intValue() : null);
-            grade.setName((String) result[5]);
+            grade.setId(result[5] != null ? ((Number) result[5]).intValue() : null);
+            grade.setName((String) result[6]);
             user.setGrade(grade);
 
             // Ánh xạ Major
             Major major = new Major();
-            major.setId(result[6] != null ? ((Number) result[6]).intValue() : null);
-            major.setName((String) result[7]);
-            major.setIconUrl((String) result[8]);
+            major.setId(result[7] != null ? ((Number) result[7]).intValue() : null);
+            major.setName((String) result[8]);
+            major.setIconUrl((String) result[9]);
             user.setMajor(major);
 
-            user.setBio((String) result[9]);
-            user.setDistance(result[10] != null ? ((Number) result[10]).intValue() : null);
+            user.setBio((String) result[10]);
+            user.setDistance(result[11] != null ? ((Number) result[11]).intValue() : null);
 
             // Ánh xạ commonHobbies từ chuỗi thành List<Hobbie>
-            String hobbiesString = (String) result[11];
+            String hobbiesString = (String) result[12];
             List<Hobbie> commonHobbies = new ArrayList<>();
             if (hobbiesString != null) {
                 String[] hobbiesArray = hobbiesString.split("\\|");
                 for (String hobbyStr : hobbiesArray) {
                     String[] hobbyDetails = hobbyStr.split(":");
-                    if (hobbyDetails.length == 4) {
+                    if (hobbyDetails.length == 3) {
                         Hobbie hobby = new Hobbie();
                         hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
                         hobby.setTitle(hobbyDetails[1].trim());
-                        hobby.setIconUrl(hobbyDetails[2] + hobbyDetails[3].trim());
+                        hobby.setIconUrl(hobbyDetails[2].trim());
                         commonHobbies.add(hobby);
                     }
                 }
             }
+            user.setCommonHobbies(commonHobbies);
 
-            String purposesConcat = (String) result[12];
+            // Ánh xạ purposes
+            String purposesConcat = (String) result[13];
             if (purposesConcat != null) {
                 List<String> purposes = Arrays.asList(purposesConcat.split("\\|"));
                 user.setPurpose(purposes);
             }
-            suggestedUsers.add(user);
-            user.setCommonHobbies(commonHobbies);
+
+            // Ánh xạ pictures
+            String picturesConcat = (String) result[14];
+            if (picturesConcat != null) {
+                List<String> pictures = Arrays.asList(picturesConcat.split("\\|"));
+                user.setPictures(pictures);
+            }
 
             suggestedUsers.add(user);
         }
