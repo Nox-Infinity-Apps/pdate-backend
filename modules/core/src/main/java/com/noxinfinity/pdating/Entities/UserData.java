@@ -1,5 +1,7 @@
 package com.noxinfinity.pdating.Entities;
 
+import com.noxinfinity.pdating.Entities.Enums.AuthProvider;
+import com.noxinfinity.pdating.Entities.Enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,6 +45,10 @@ public class UserData {
 
     @Column(name = "bio")
     private String bio;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", columnDefinition = "ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER'", nullable = false)
+    private Gender provider;
 
     @OneToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")

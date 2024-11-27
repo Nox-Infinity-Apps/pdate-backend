@@ -80,6 +80,11 @@ type Likes{
     targetUserId : String
 }
 
+enum Gender {
+    MALE,
+    FEMALE,
+    OTHER
+}
 
 type UserSuggest {
     fcmId: String!
@@ -92,6 +97,7 @@ type UserSuggest {
     distance: Int
     commonHobbies: [Hobbie]
     purpose: [String]
+    gender: Gender!
 }
 
 type Grade {
