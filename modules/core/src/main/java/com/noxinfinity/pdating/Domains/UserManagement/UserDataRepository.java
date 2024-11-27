@@ -15,6 +15,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
             "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
+            "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics, " +
             "       COUNT(uh_match.hobby_id) AS common_hobby_count " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
@@ -24,6 +25,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "JOIN hobbies h ON uh.hobby_id = h.id " +
             "LEFT JOIN user_purposes up ON u.fcm_id = up.user_id " +
             "LEFT JOIN purpose p ON up.purpose_id = p.id " +
+            "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "LEFT JOIN user_hobbies uh_match ON uh_match.fcm_id = :currentUserId AND uh_match.hobby_id = uh.hobby_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "GROUP BY u.fcm_id, ul.lat, ul.lng, g.name, m.name, m.icon_url " +
@@ -43,6 +45,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
             "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
+            "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics, " +
             "       COUNT(uh_match.hobby_id) AS common_hobby_count " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
@@ -52,6 +55,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "JOIN hobbies h ON uh.hobby_id = h.id " +
             "LEFT JOIN user_purposes up ON u.fcm_id = up.user_id " +
             "LEFT JOIN purpose p ON up.purpose_id = p.id " +
+            "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "LEFT JOIN user_hobbies uh_match ON uh_match.fcm_id = :currentUserId AND uh_match.hobby_id = uh.hobby_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "  AND EXISTS (SELECT 1 FROM user_purposes up_match " +
@@ -75,6 +79,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
             "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
+            "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics, " +
             "       COUNT(uh_match.hobby_id) AS common_hobby_count " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
@@ -84,6 +89,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "JOIN hobbies h ON uh.hobby_id = h.id " +
             "LEFT JOIN user_purposes up ON u.fcm_id = up.user_id " +
             "LEFT JOIN purpose p ON up.purpose_id = p.id " +
+            "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "LEFT JOIN user_hobbies uh_match ON uh_match.fcm_id = :currentUserId AND uh_match.hobby_id = uh.hobby_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "   AND u.major_id = :majorId " +
