@@ -1,0 +1,9 @@
+type Category {
+    id: Int
+    title: String
+    iconUrl: String
+}
+
+extend type Query {
+    getListCategory: [Category]!
+}

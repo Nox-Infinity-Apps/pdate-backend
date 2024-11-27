@@ -1,6 +1,7 @@
 extend type Query {
     getUserInfo: UserInfoResponse!
-    suggestedUsers(currentLat: Float!, currentLng: Float!, limit: Int, offset: Int): [UserSuggest]
+    suggestedUsers(currentLat: Float!, currentLng: Float!, offset: Int): [UserSuggest]
+    suggestedUsersWithFilter(currentLat: Float!, currentLng: Float!, offset: Int, categoryId: Int): [UserSuggest]
     blockedUsers: [UserData]
 }
 
@@ -90,6 +91,7 @@ type UserSuggest {
     bio: String
     distance: Int
     commonHobbies: [Hobbie]
+    purpose: [String]
 }
 
 type Grade {
