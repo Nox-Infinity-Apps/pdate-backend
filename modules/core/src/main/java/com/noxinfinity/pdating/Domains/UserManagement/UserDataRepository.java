@@ -92,7 +92,6 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "LEFT JOIN user_purposes up ON u.fcm_id = up.user_id " +
             "LEFT JOIN purpose p ON up.purpose_id = p.id " +
             "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
-            "LEFT JOIN user_hobbies uh_match ON uh_match.fcm_id = :currentUserId AND uh_match.hobby_id = uh.hobby_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "   AND u.major_id = :majorId " +
             "   AND u.is_activated = 1 " +
