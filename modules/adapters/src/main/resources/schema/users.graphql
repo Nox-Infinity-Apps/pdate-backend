@@ -2,6 +2,7 @@ extend type Query {
     getUserInfo: UserInfoResponse!
     suggestedUsers(currentLat: Float!, currentLng: Float!, offset: Int): [UserSuggest]
     suggestedUsersWithFilter(currentLat: Float!, currentLng: Float!, offset: Int, categoryId: Int): [UserSuggest]
+    suggestedUsersNearBy(currentLat: Float!, currentLng: Float!, offset: Int): [UserSuggest]
     blockedUsers: [UserData]
     getAllPurpose: GetAllPurposeResponse!
 }

@@ -108,4 +108,34 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             @Param("majorId") long majorId
     );
 
+    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
+            "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
+            "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
+            "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
+            "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics, " +
+            "       COUNT(uh_match.hobby_id) AS common_hobby_count " +
+            "FROM user_data u " +
+            "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
+            "LEFT JOIN grades g ON u.grade_id = g.id " +
+            "LEFT JOIN majors m ON u.major_id = m.id " +
+            "JOIN user_hobbies uh ON u.fcm_id = uh.fcm_id " +
+            "JOIN hobbies h ON uh.hobby_id = h.id " +
+            "LEFT JOIN user_purposes up ON u.fcm_id = up.user_id " +
+            "LEFT JOIN purpose p ON up.purpose_id = p.id " +
+            "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
+            "WHERE u.fcm_id != :currentUserId " +
+            "   AND u.is_activated = 1 " +
+            "   AND distance < 5000 " +
+            "GROUP BY u.fcm_id, ul.lat, ul.lng, g.name, m.name, m.icon_url " +
+            "ORDER BY " +
+            "   distance " +
+            "LIMIT 10 OFFSET :offset", nativeQuery = true)
+    List<Object[]> findSuggestedUsersNearBy(
+            @Param("currentUserId") String currentUserId,
+            @Param("currentLat") double currentLat,
+            @Param("currentLng") double currentLng,
+            @Param("offset") int offset
+    );
+
 }
