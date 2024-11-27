@@ -1,5 +1,6 @@
 package com.noxinfinity.pdating.Entities;
 
+import com.noxinfinity.pdating.Entities.Enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,9 @@ public class UserData {
 
     @Column(name = "public_avatar_id")
     private String publicAvataId;
+
+    @Column(name = "gender")
+    private Gender gender;
 
     @ManyToOne
     @JoinColumn(name = "grade_id", referencedColumnName = "id")

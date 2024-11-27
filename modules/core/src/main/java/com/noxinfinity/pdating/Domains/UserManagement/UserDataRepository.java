@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface UserDataRepository extends JpaRepository<UserData, String> {
-    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
+    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
             "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
@@ -41,7 +41,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             @Param("offset") int offset
     );
 
-    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
+    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
             "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
@@ -76,7 +76,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             @Param("purpose") String purpose
     );
 
-    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
+    @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
             "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
