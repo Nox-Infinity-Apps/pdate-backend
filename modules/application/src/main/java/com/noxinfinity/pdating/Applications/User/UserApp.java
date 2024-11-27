@@ -74,4 +74,16 @@ public class UserApp implements IUserApp {
         return new UserPicsQueryResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();
     }
 
+    @Override
+    public GetAllPurposeResponse getAllPurpose() throws Exception {
+        List<PurposeResponse> data = userDataService.getAllPurpose();
+        return new GetAllPurposeResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();
+    }
+
+    @Override
+    public GetAllPurposeResponse updateUserPurpose(String id, List<Integer> purposeIds) throws Exception {
+        List<PurposeResponse> data = userDataService.updateUserPurpose(id,purposeIds);
+        return new GetAllPurposeResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(data).build();
+    }
+
 }

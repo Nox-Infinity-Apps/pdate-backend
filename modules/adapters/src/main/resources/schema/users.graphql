@@ -3,13 +3,16 @@ extend type Query {
     suggestedUsers(currentLat: Float!, currentLng: Float!, offset: Int): [UserSuggest]
     suggestedUsersWithFilter(currentLat: Float!, currentLng: Float!, offset: Int, categoryId: Int): [UserSuggest]
     blockedUsers: [UserData]
+    getAllPurpose: GetAllPurposeResponse!
 }
+
 
 extend type Mutation {
     updateUserInfo(input: UpdateUserInfo): UserInfoResponse!
     blockUser(blockedUserId: String!): BlockUserResponse!
     unblockUser(blockedUserId: String!): BlockUserResponse!
     updateFcmTokenAndLocation(input: UpdateFcmTokenAndLocation!): UserInfoSuccessResponse!
+    updateUserPurpose(purposeIds: [Int]!): GetAllPurposeResponse!
 }
 
 input UpdateUserInfo {
@@ -58,6 +61,7 @@ type UserData {
     location : Location
     hobbies : [Hobbies]
     pictures : [Pics]
+    purpose : [PurposeResponse]
 }
 
 type Location {
@@ -122,6 +126,16 @@ type BlockUserResponse implements ResponseBase {
 input UpdateFcmTokenAndLocation {
     fcmNotificationToken: String
     location: LocationUser
+}
+
+type PurposeResponse {
+    id: Int
+    name: String
+}
+type GetAllPurposeResponse implements ResponseBase{
+    status: StatusEnum!
+    message: String!
+    data: [PurposeResponse]
 }
 
 enum Gender {

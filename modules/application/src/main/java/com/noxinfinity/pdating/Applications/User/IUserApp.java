@@ -2,6 +2,8 @@ package com.noxinfinity.pdating.Applications.User;
 import com.noxinfinity.pdating.graphql.types.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface IUserApp {
     UserInfoSuccessResponse getUserInfoById(String id);
     UserInfoSuccessResponse updateUserInfoById(String id, UpdateUserInfo body) throws Exception;
@@ -14,4 +16,8 @@ public interface IUserApp {
     UserPicsMutationResponse updatePictureById(String id, MultipartFile file, String picId) throws Exception;
     UserPicsMutationResponse deletePictureById(String id, String picId) throws Exception;
     UserPicsQueryResponse getUserPics(String id) throws Exception;
+
+    //Purpose
+    GetAllPurposeResponse getAllPurpose() throws Exception;
+    GetAllPurposeResponse updateUserPurpose(String id, List<Integer> purposeIds) throws Exception;
 }
