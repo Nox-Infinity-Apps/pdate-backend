@@ -81,11 +81,13 @@ type Likes{
 }
 
 
+
 type UserSuggest {
     fcmId: String!
     fullName: String
     dob: String
     avatarUrl: String
+    gender: Gender!
     grade: Grade
     major: Major
     bio: String
@@ -122,3 +124,8 @@ input UpdateFcmTokenAndLocation {
     location: LocationUser
 }
 
+enum Gender {
+    MALE,
+    FEMALE,
+    OTHER
+}
