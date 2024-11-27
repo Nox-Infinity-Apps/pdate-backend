@@ -92,6 +92,7 @@ type UserSuggest {
     distance: Int
     commonHobbies: [Hobbie]
     purpose: [String]
+    pictures: [String]
 }
 
 type Grade {

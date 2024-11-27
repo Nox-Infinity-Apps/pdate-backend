@@ -109,13 +109,18 @@ public class BaseServices {
                 }
             }
 
+            user.setCommonHobbies(commonHobbies);
+
             String purposesConcat = (String) result[12];
             if (purposesConcat != null) {
                 List<String> purposes = Arrays.asList(purposesConcat.split("\\|"));
                 user.setPurpose(purposes);
             }
-            suggestedUsers.add(user);
-            user.setCommonHobbies(commonHobbies);
+            String picturesConcat = (String) result[13];
+            if (picturesConcat != null) {
+                List<String> pictures = Arrays.asList(picturesConcat.split("\\|"));
+                user.setPictures(pictures);
+            }
 
             suggestedUsers.add(user);
         }

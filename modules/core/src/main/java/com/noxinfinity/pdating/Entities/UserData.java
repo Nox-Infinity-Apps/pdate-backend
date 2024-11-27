@@ -44,6 +44,15 @@ public class UserData {
     @Column(name = "bio")
     private String bio;
 
+    @Column(name = "is_activated")
+    private Integer isActivated;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
     @OneToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
