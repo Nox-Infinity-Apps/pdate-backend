@@ -46,9 +46,14 @@ public class UserData {
     @Column(name = "bio")
     private String bio;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", columnDefinition = "ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER'", nullable = false)
-    private Gender provider;
+    @Column(name = "is_activated")
+    private Integer isActivated;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @Column(name = "created_at")
+    private Date createdAt;
 
     @OneToOne
     @JoinColumn(name = "fcm_id", referencedColumnName = "fcm_id")
