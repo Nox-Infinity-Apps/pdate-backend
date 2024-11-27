@@ -76,4 +76,9 @@ public class UserService implements IUser {
         }
         return null;
     }
+
+    public List<UserSuggest> getSuggestedUsersNearBy(String currentUserId, double currentLat, double currentLng, int offset) {
+        return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsersNearBy(currentUserId, currentLat, currentLng, offset * 10));
+
+    }
 }

@@ -79,6 +79,8 @@ public class BaseServices {
             // Ánh xạ Gender
             if (result[4] != null) {
                 user.setGender(Gender.valueOf(result[4].toString()));
+            } else {
+                user.setGender(Gender.OTHER);
             }
 
             // Ánh xạ Grade
@@ -117,17 +119,19 @@ public class BaseServices {
 
             // Ánh xạ purposes
             String purposesConcat = (String) result[13];
+            List<String> purposes = new ArrayList<>();
             if (purposesConcat != null) {
-                List<String> purposes = Arrays.asList(purposesConcat.split("\\|"));
-                user.setPurpose(purposes);
+                purposes = Arrays.asList(purposesConcat.split("\\|"));
             }
+            user.setPurpose(purposes);
 
             // Ánh xạ pictures
             String picturesConcat = (String) result[14];
+            List<String> pictures = new ArrayList<>();
             if (picturesConcat != null) {
-                List<String> pictures = Arrays.asList(picturesConcat.split("\\|"));
-                user.setPictures(pictures);
+                pictures = Arrays.asList(picturesConcat.split("\\|"));
             }
+            user.setPictures(pictures);
 
             suggestedUsers.add(user);
         }

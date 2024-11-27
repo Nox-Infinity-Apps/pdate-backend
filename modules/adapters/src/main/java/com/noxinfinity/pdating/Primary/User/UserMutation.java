@@ -71,6 +71,21 @@ public class UserMutation {
         }
     }
 
+    @DgsQuery()
+    @ValidateToken
+    public List<UserSuggest> suggestedUsersNearBy(
+            @InputArgument double currentLat,
+            @InputArgument double currentLng,
+            @InputArgument Integer offset
+    ){
+        String userId = Base.getUserId();
+        try {
+            return userService.getSuggestedUsersNearBy(userId, currentLat, currentLng, offset);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
     @DgsMutation()
     @ValidateToken
     public BlockUserResponse blockUser(
