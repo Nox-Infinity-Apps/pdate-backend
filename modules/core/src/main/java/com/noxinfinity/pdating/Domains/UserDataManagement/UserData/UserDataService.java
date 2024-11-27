@@ -5,10 +5,7 @@ import com.noxinfinity.pdating.Entities.Enums.AuthProvider;
 import com.noxinfinity.pdating.Entities.Hobbies;
 import com.noxinfinity.pdating.Entities.UserData;
 import com.noxinfinity.pdating.Repository.Auth.IAuthRespository;
-import com.noxinfinity.pdating.Repository.Other.IGradeRespository;
-import com.noxinfinity.pdating.Repository.Other.IHobbiesRespository;
-import com.noxinfinity.pdating.Repository.Other.IMajorRespository;
-import com.noxinfinity.pdating.Repository.Other.IUserLocationRepository;
+import com.noxinfinity.pdating.Repository.Other.*;
 import com.noxinfinity.pdating.Repository.UserData.IUserDataRepository;
 import com.noxinfinity.pdating.ThirdServices.StreamChat;
 import com.noxinfinity.pdating.graphql.types.*;
@@ -28,6 +25,7 @@ public class UserDataService implements IUserDataService {
     private final IMajorRespository _major;
     private final IHobbiesRespository _hobbies;
     private final IUserLocationRepository _location;
+    private final IPurpose _purpose;
 
 
     @Autowired
@@ -37,6 +35,7 @@ public class UserDataService implements IUserDataService {
                            IMajorRespository majorRespository,
                            IHobbiesRespository hobbiesRespository,
                             IUserLocationRepository locationRepository,
+                            IPurpose purposeRepository,
                            StreamChat streamChat) {
         this._user = userDataRepository;
         this._auth = authRepository;
@@ -44,6 +43,7 @@ public class UserDataService implements IUserDataService {
         this._major = majorRespository;
         this._hobbies = hobbiesRespository;
         this._location = locationRepository;
+        this._purpose = purposeRepository;
     }
     public Boolean createOrUpdateUserDataFromGoogleReturnIsNew(UserFromGoogle user)  {
         //Tìm xem user đã tồn tại chưa
@@ -120,6 +120,16 @@ public class UserDataService implements IUserDataService {
                             .build()
                     : null);
             userData.setHobbies(user.getHobbies() != null ? mapUserHobbiesToHobbies(user.getHobbies()) : null);
+
+            //Purposes
+            userData.setPurpose(user.getPurposes() != null ?
+                    user.getPurposes().stream()
+                            .map(purpose -> new PurposeResponse.Builder()
+                                    .id(purpose.getId() != null ? Math.toIntExact(purpose.getId()) : null)
+                                    .name(purpose.getTitle() != null ? purpose.getTitle() : "")
+                                    .build())
+                            .collect(Collectors.toList())
+                    : null);
             return userData;
         } else {
             return null;
@@ -219,6 +229,33 @@ public class UserDataService implements IUserDataService {
             _user.save(user);
             return null;
         }
+    }
+
+    @Override
+    public List<PurposeResponse> getAllPurpose() throws Exception {
+        List<Purpose> purposes = _purpose.findAll();
+        return purposes.stream()
+                .map(purpose -> new PurposeResponse.Builder()
+                        .id(purpose.getId() != null ? Math.toIntExact(purpose.getId()) : null)
+                        .name(purpose.getTitle() != null ? purpose.getTitle() : "")
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PurposeResponse> updateUserPurpose(String id, List<Integer> purposeIds) throws Exception {
+        UserData user = _user.findById(id).orElse(null);
+        List<Long> idPurposes = purposeIds.stream().map(Long::valueOf).collect(Collectors.toList());
+        if (user == null) {
+            throw new Exception("Không tồn tại user");
+        }
+        List<Purpose> purposes = _purpose.findAllById(idPurposes);
+        if (purposes.size() != purposeIds.size()) {
+            throw new Exception("Mục tiêu không tồn tại trong danh sách.");
+        }
+        user.setPurposes(purposes);
+        _user.save(user);
+        return null;
     }
 
 
