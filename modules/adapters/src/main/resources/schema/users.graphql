@@ -91,6 +91,7 @@ type UserSuggest {
     fullName: String
     dob: String
     avatarUrl: String
+    gender: Gender
     grade: Grade
     major: Major
     bio: String
@@ -128,3 +129,7 @@ input UpdateFcmTokenAndLocation {
     location: LocationUser
 }
 
+enum Gender {
+    Male,
+    Female
+}

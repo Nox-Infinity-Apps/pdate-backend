@@ -35,6 +35,10 @@ public class UserData {
     @Column(name = "public_avatar_id")
     private String publicAvataId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", columnDefinition = "ENUM('FEMALE','MALE','OTHER') DEFAULT 'OTHER'")
+    private Gender gender;
+
     @ManyToOne
     @JoinColumn(name = "grade_id", referencedColumnName = "id")
     private Grades grade;
