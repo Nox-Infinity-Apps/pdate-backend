@@ -79,6 +79,8 @@ public class BaseServices {
             // Ánh xạ Gender
             if (result[4] != null) {
                 user.setGender(Gender.valueOf(result[4].toString()));
+            } else {
+                user.setGender(Gender.OTHER);
             }
 
             // Ánh xạ Grade
