@@ -75,7 +75,7 @@ public class BaseServices {
             user.setFullName((String) result[1]);
             user.setDob(result[2] != null ? result[2].toString() : null);
             user.setAvatarUrl((String) result[3]);
-            user.setGender(result[4] != null ? Gender.valueOf((String) result[4]) : null);
+            user.setGender(result[4] != null ? Gender.valueOf((String) result[4]) : Gender.OTHER);
 
             // Ánh xạ Grade
             Grade grade = new Grade();
@@ -107,6 +107,8 @@ public class BaseServices {
                         })
                         .collect(Collectors.toList());
                 user.setCommonHobbies(commonHobbies);
+            } else {
+                user.setCommonHobbies(new ArrayList<>());
             }
 
             // Ánh xạ allHobbies
@@ -123,18 +125,24 @@ public class BaseServices {
                         })
                         .collect(Collectors.toList());
                 user.setAllHobbies(allHobbies);
+            } else {
+                user.setAllHobbies(new ArrayList<>());
             }
 
             // Ánh xạ purposes
             String purposesConcat = (String) result[14];
             if (purposesConcat != null) {
                 user.setPurpose(Arrays.asList(purposesConcat.split("\\|")));
+            } else {
+                user.setPurpose(new ArrayList<>());
             }
 
             // Ánh xạ pictures
             String picturesConcat = (String) result[15];
             if (picturesConcat != null) {
                 user.setPictures(Arrays.asList(picturesConcat.split("\\|")));
+            } else {
+                user.setPictures(new ArrayList<>());
             }
 
             suggestedUsers.add(user);
