@@ -21,9 +21,14 @@ public class StreamChat {
         DefaultClient.setInstance(client);
     }
 
-    public String signToken(String userId) throws Exception {
+    public String signToken(String userId,
+                            String fullName,
+                            String avatar
+
+    ) throws Exception {
         var usersUpsertRequest = User.upsert();
-        usersUpsertRequest.user(User.UserRequestObject.builder().id(userId).role("user").build());
+        usersUpsertRequest.user(User.UserRequestObject.builder().id(userId).role("user")
+                        .name(fullName).additionalField("image", avatar).build());
         usersUpsertRequest.request();
         return User.createToken(userId, null, null);
     }
