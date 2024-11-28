@@ -16,8 +16,13 @@ import java.nio.file.Paths;
 @Service
 public class EmailService {
 
+    private final JavaMailSender javaMailSender;
+
     @Autowired
-    private JavaMailSender javaMailSender;
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
 
     // Hàm gửi email
     public void sendEmail(String to, String subject, String text) throws MailException, MessagingException {
