@@ -98,6 +98,7 @@ type UserSuggest {
     bio: String
     distance: Int
     commonHobbies: [Hobbie]
+    allHobbies: [Hobbie]
     purpose: [String]
     pictures: [String]
 }

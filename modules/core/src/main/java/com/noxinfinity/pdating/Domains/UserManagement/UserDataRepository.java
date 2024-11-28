@@ -13,7 +13,8 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
     @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
-            "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CASE WHEN uh.hobby_id IN (SELECT hobby_id FROM user_hobbies WHERE fcm_id = :currentUserId) THEN CONCAT(h.id, ':', h.title, ':', h.icon_url) END SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
             "FROM user_data u " +
@@ -40,7 +41,8 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
     @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
-            "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CASE WHEN uh.hobby_id IN (SELECT hobby_id FROM user_hobbies WHERE fcm_id = :currentUserId) THEN CONCAT(h.id, ':', h.title, ':', h.icon_url) END SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
             "FROM user_data u " +
@@ -72,7 +74,8 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
     @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
-            "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CASE WHEN uh.hobby_id IN (SELECT hobby_id FROM user_hobbies WHERE fcm_id = :currentUserId) THEN CONCAT(h.id, ':', h.title, ':', h.icon_url) END SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
             "FROM user_data u " +
@@ -103,7 +106,8 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
     @Query(value = "SELECT u.fcm_id, u.fullname, u.dob, u.avatar_url, u.gender, u.grade_id, g.name AS grade_name, u.major_id, m.name AS major_name, m.icon_url, u.bio, " +
             "       (6371 * acos(cos(radians(:currentLat)) * cos(radians(ul.lat)) " +
             "       * cos(radians(ul.lng) - radians(:currentLng)) + sin(radians(:currentLat)) * sin(radians(ul.lat)))) AS distance, " +
-            "       GROUP_CONCAT(DISTINCT h.id, ':', h.title, ':', h.icon_url SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CASE WHEN uh.hobby_id IN (SELECT hobby_id FROM user_hobbies WHERE fcm_id = :currentUserId) THEN CONCAT(h.id, ':', h.title, ':', h.icon_url) END SEPARATOR '|') AS common_hobbies, " +
+            "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
             "FROM user_data u " +

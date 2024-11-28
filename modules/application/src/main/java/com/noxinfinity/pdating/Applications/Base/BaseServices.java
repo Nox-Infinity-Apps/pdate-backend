@@ -75,13 +75,7 @@ public class BaseServices {
             user.setFullName((String) result[1]);
             user.setDob(result[2] != null ? result[2].toString() : null);
             user.setAvatarUrl((String) result[3]);
-
-            // Ánh xạ Gender
-            if (result[4] != null) {
-                user.setGender(Gender.valueOf(result[4].toString()));
-            } else {
-                user.setGender(Gender.OTHER);
-            }
+            user.setGender(result[4] != null ? Gender.valueOf((String) result[4]) : null);
 
             // Ánh xạ Grade
             Grade grade = new Grade();
@@ -99,39 +93,49 @@ public class BaseServices {
             user.setBio((String) result[10]);
             user.setDistance(result[11] != null ? ((Number) result[11]).intValue() : null);
 
-            // Ánh xạ commonHobbies từ chuỗi thành List<Hobbie>
-            String hobbiesString = (String) result[12];
-            List<Hobbie> commonHobbies = new ArrayList<>();
-            if (hobbiesString != null) {
-                String[] hobbiesArray = hobbiesString.split("\\|");
-                for (String hobbyStr : hobbiesArray) {
-                    String[] hobbyDetails = hobbyStr.split(":");
-                    if (hobbyDetails.length == 3) {
-                        Hobbie hobby = new Hobbie();
-                        hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
-                        hobby.setTitle(hobbyDetails[1].trim());
-                        hobby.setIconUrl(hobbyDetails[2].trim());
-                        commonHobbies.add(hobby);
-                    }
-                }
+            // Ánh xạ commonHobbies
+            String commonHobbiesConcat = (String) result[12];
+            if (commonHobbiesConcat != null) {
+                List<Hobbie> commonHobbies = Arrays.stream(commonHobbiesConcat.split("\\|"))
+                        .map(hobbyStr -> {
+                            String[] hobbyDetails = hobbyStr.split(":");
+                            Hobbie hobby = new Hobbie();
+                            hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
+                            hobby.setTitle(hobbyDetails[1].trim());
+                            hobby.setIconUrl(hobbyDetails[2] + hobbyDetails[3].trim());
+                            return hobby;
+                        })
+                        .collect(Collectors.toList());
+                user.setCommonHobbies(commonHobbies);
             }
-            user.setCommonHobbies(commonHobbies);
+
+            // Ánh xạ allHobbies
+            String allHobbiesConcat = (String) result[13];
+            if (allHobbiesConcat != null) {
+                List<Hobbie> allHobbies = Arrays.stream(allHobbiesConcat.split("\\|"))
+                        .map(hobbyStr -> {
+                            String[] hobbyDetails = hobbyStr.split(":");
+                            Hobbie hobby = new Hobbie();
+                            hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
+                            hobby.setTitle(hobbyDetails[1].trim());
+                            hobby.setIconUrl(hobbyDetails[2] + hobbyDetails[3].trim());
+                            return hobby;
+                        })
+                        .collect(Collectors.toList());
+                user.setAllHobbies(allHobbies);
+            }
 
             // Ánh xạ purposes
-            String purposesConcat = (String) result[13];
-            List<String> purposes = new ArrayList<>();
+            String purposesConcat = (String) result[14];
             if (purposesConcat != null) {
-                purposes = Arrays.asList(purposesConcat.split("\\|"));
+                user.setPurpose(Arrays.asList(purposesConcat.split("\\|")));
             }
-            user.setPurpose(purposes);
 
             // Ánh xạ pictures
-            String picturesConcat = (String) result[14];
-            List<String> pictures = new ArrayList<>();
+            String picturesConcat = (String) result[15];
             if (picturesConcat != null) {
-                pictures = Arrays.asList(picturesConcat.split("\\|"));
+                user.setPictures(Arrays.asList(picturesConcat.split("\\|")));
             }
-            user.setPictures(pictures);
 
             suggestedUsers.add(user);
         }
