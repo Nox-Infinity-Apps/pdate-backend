@@ -2,6 +2,7 @@ package com.noxinfinity.pdating.Applications.Auth;
 
 import com.noxinfinity.pdating.Domains.AuthManagement.Google.IGoogleService;
 import com.noxinfinity.pdating.Domains.AuthManagement.JWT.IJwtService;
+import com.noxinfinity.pdating.Domains.MailManagement.EmailService;
 import com.noxinfinity.pdating.Domains.UserDataManagement.UserData.IUserDataService;
 import com.noxinfinity.pdating.graphql.types.LoginWithGoogle;
 import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
@@ -13,11 +14,13 @@ public class AuthServices implements IAuth{
     private IGoogleService ggService;
     private IJwtService jwtService;
     private IUserDataService userDataService;
+    private EmailService emailService;
     @Autowired
-    public AuthServices(IGoogleService ggService , IJwtService jwtService, IUserDataService userDataService) {
+    public AuthServices(IGoogleService ggService , IJwtService jwtService, IUserDataService userDataService, EmailService emailService){
         this.ggService = ggService;
         this.jwtService = jwtService;
         this.userDataService = userDataService;
+        this.emailService = emailService;
     }
     @Override
     public LoginWithGoogle loginWithGoogle(String token) throws Exception {
@@ -26,6 +29,9 @@ public class AuthServices implements IAuth{
                 //Tao token
                 String accessToken = jwtService.generateToken(user);
                 Boolean isNew = userDataService.createOrUpdateUserDataFromGoogleReturnIsNew(user);
+                if(isNew){
+                    emailService.sendEmail(user.getEmail(), "Welcome to PDATE", EmailService.readHtmlFile("modules/adapters/src/main/resources/templates/send_mail_template.html"));
+                }
                 return new LoginWithGoogle.Builder().user(user).accessToken(accessToken).isNew(isNew).build();
             }
            throw new Exception("Access token is not valid");
