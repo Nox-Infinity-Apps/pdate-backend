@@ -130,6 +130,9 @@ public class UserDataService implements IUserDataService {
                                     .build())
                             .collect(Collectors.toList())
                     : null);
+            userData.setIsActivated(user.getIsActivated() != null ? user.getIsActivated() : 0);
+            userData.setIsVerified(false);
+            userData.setGender(user.getGender() != null ? Gender.valueOf(user.getGender().toValue()) : Gender.OTHER);
             return userData;
         } else {
             return null;
@@ -194,7 +197,9 @@ public class UserDataService implements IUserDataService {
 
                 user.setHobbies(currentHobbies);
             }
-
+            user.setIsActivated(1);
+            user.setGender(body.getGender() != null ? com.noxinfinity.pdating.Entities.Enums.Gender.fromValue(body.getGender().toString()) : com.noxinfinity.pdating.Entities.Enums.Gender.OTHER);
+            user.setUpdatedAt(new java.util.Date());
             // Lưu UserData
             _user.save(user);
             return null;

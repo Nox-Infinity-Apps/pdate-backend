@@ -27,6 +27,7 @@ input UpdateUserInfo {
     location: LocationUser
     hobbies: [Int]
     provider: String
+    gender : Gender
 }
 
 input LocationUser {
@@ -62,6 +63,9 @@ type UserData {
     hobbies : [Hobbies]
     pictures : [Pics]
     purpose : [PurposeResponse]
+    gender : Gender
+    isActivated : Int
+    isVerified : Boolean
 }
 
 type Location {
