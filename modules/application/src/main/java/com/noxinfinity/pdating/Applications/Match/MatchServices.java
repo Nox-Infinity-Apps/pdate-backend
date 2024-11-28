@@ -103,9 +103,11 @@ public class MatchServices implements IMatch{
             ArrayList<String> usersInConversationList = new ArrayList<>();
             usersInConversationList.add(user1.getUserId());
             usersInConversationList.add(user2.getUserId());
-            conversationRepository.save(conversation);
-            conversationService.createConversationForCouple(conversation.getId().toString(), usersInConversationList);
-            return conversation;
+            var result = conversationRepository.save(conversation);
+            conversationService.createConversationForCouple(
+                    result.getId().toString()
+                    , usersInConversationList);
+            return result;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
         }
