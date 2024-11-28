@@ -103,7 +103,12 @@ public class BaseServices {
                             Hobbie hobby = new Hobbie();
                             hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
                             hobby.setTitle(hobbyDetails[1].trim());
-                            hobby.setIconUrl(hobbyDetails[2] + hobbyDetails[3].trim());
+
+                            StringBuilder url = new StringBuilder();
+                            for(int i = 2; i < hobbyDetails.length; i++) {
+                                url.append(hobbyDetails[i].trim());
+                            }
+                            hobby.setIconUrl(url.toString());
                             return hobby;
                         })
                         .collect(Collectors.toList());
@@ -121,7 +126,11 @@ public class BaseServices {
                             Hobbie hobby = new Hobbie();
                             hobby.setId(Integer.parseInt(hobbyDetails[0].trim()));
                             hobby.setTitle(hobbyDetails[1].trim());
-                            hobby.setIconUrl(hobbyDetails[2] + hobbyDetails[3].trim());
+                            StringBuilder url = new StringBuilder();
+                            for(int i = 2; i < hobbyDetails.length; i++) {
+                                url.append(hobbyDetails[i].trim());
+                            }
+                            hobby.setIconUrl(url.toString());
                             return hobby;
                         })
                         .collect(Collectors.toList());

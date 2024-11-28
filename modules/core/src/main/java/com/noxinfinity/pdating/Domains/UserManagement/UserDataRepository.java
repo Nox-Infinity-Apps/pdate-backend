@@ -28,8 +28,13 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "  AND u.is_activated = 1 " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_likes ul " +
+            "                  WHERE ul.current_user_id = :currentUserId AND ul.target_user_id = u.fcm_id) " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_dont_cared udc " +
+            "                  WHERE udc.user_id = :currentUserId AND udc.dont_care_user_id = u.fcm_id) " +
             "GROUP BY u.fcm_id, ul.lat, ul.lng, g.name, m.name, m.icon_url " +
-            "ORDER BY distance " +
+            "ORDER BY " +
+            "   distance " +
             "LIMIT 10 OFFSET :offset", nativeQuery = true)
     List<Object[]> findSuggestedUsers(
             @Param("currentUserId") String currentUserId,
@@ -56,6 +61,10 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "  AND u.is_activated = 1 " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_likes ul " +
+            "                  WHERE ul.current_user_id = :currentUserId AND ul.target_user_id = u.fcm_id) " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_dont_cared udc " +
+            "                  WHERE udc.user_id = :currentUserId AND udc.dont_care_user_id = u.fcm_id) " +
             "  AND EXISTS (SELECT 1 FROM user_purposes up_match " +
             "              JOIN purpose p_match ON up_match.purpose_id = p_match.id " +
             "              WHERE up_match.user_id = :currentUserId AND p_match.title = :purpose AND up_match.purpose_id = up.purpose_id) " +
@@ -88,6 +97,10 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "LEFT JOIN purpose p ON up.purpose_id = p.id " +
             "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "WHERE u.fcm_id != :currentUserId " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_likes ul " +
+            "                  WHERE ul.current_user_id = :currentUserId AND ul.target_user_id = u.fcm_id) " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_dont_cared udc " +
+            "                  WHERE udc.user_id = :currentUserId AND udc.dont_care_user_id = u.fcm_id) " +
             "   AND u.major_id = :majorId " +
             "   AND u.is_activated = 1 " +
             "GROUP BY u.fcm_id, ul.lat, ul.lng, g.name, m.name, m.icon_url " +
@@ -121,7 +134,11 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "   AND u.is_activated = 1 " +
-            "   AND distance < 5000 " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_likes ul " +
+            "                  WHERE ul.current_user_id = :currentUserId AND ul.target_user_id = u.fcm_id) " +
+            "  AND NOT EXISTS (SELECT 1 FROM user_dont_cared udc " +
+            "                  WHERE udc.user_id = :currentUserId AND udc.dont_care_user_id = u.fcm_id) " +
+            "   AND distance < 50000 " +
             "GROUP BY u.fcm_id, ul.lat, ul.lng, g.name, m.name, m.icon_url " +
             "ORDER BY " +
             "   distance " +
