@@ -7,6 +7,7 @@ import com.noxinfinity.pdating.GraphQL.Exception.UnauthorizedException;
 import com.noxinfinity.pdating.GraphQL.Guard.ValidateToken;
 import com.noxinfinity.pdating.Primary.Base.Base;
 import com.noxinfinity.pdating.graphql.types.BlockUserResponse;
+import com.noxinfinity.pdating.graphql.types.DontCareUserResponse;
 import com.noxinfinity.pdating.graphql.types.UserData;
 import com.noxinfinity.pdating.graphql.types.UserSuggest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,17 @@ public class UserMutation {
         }
     }
 
+    @DgsQuery()
+    @ValidateToken
+    public List<UserData> getLikedUser(){
+        String userId = Base.getUserId();
+        try {
+            return userService.getLikedUser(userId);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
     @DgsMutation()
     @ValidateToken
     public BlockUserResponse blockUser(
@@ -111,4 +123,16 @@ public class UserMutation {
         }
     }
 
+    @DgsMutation
+    @ValidateToken
+    public DontCareUserResponse dontCarekUser(
+            @InputArgument String dontCareUserId
+    ) throws UnauthorizedException {
+        String userId = Base.getUserId();
+        try {
+            return userService.dontCareUser(userId, dontCareUserId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

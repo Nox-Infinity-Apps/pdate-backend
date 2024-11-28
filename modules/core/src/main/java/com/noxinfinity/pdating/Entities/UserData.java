@@ -73,9 +73,11 @@ public class UserData {
     private List<UserHobbies> hobbies;
 
     @OneToMany(mappedBy = "currentUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<UserLikes> likesGiven;
 
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<UserLikes> likesReceived;
 
     @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -90,6 +92,7 @@ public class UserData {
             joinColumns = @JoinColumn(name = "blocker_id", referencedColumnName = "fcm_id"),
             inverseJoinColumns = @JoinColumn(name = "blocked_id", referencedColumnName = "fcm_id")
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<UserData> blockedUsers;
 
     @ManyToMany(mappedBy = "blockedUsers")
@@ -102,4 +105,12 @@ public class UserData {
             inverseJoinColumns = @JoinColumn(name = "purpose_id", referencedColumnName = "id")
     )
     private List<Purpose> purposes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_dont_cared",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "fcm_id"),
+            inverseJoinColumns = @JoinColumn(name = "dont_care_user_id", referencedColumnName = "fcm_id")
+    )
+    private List<UserData> dontCaredUsers;
 }

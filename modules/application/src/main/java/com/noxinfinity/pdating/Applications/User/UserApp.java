@@ -1,5 +1,6 @@
 package com.noxinfinity.pdating.Applications.User;
 
+import com.noxinfinity.pdating.Applications.Base.BaseServices;
 import com.noxinfinity.pdating.Domains.UserDataManagement.UserData.IUserDataService;
 import com.noxinfinity.pdating.Domains.UserDataManagement.UserPics.IUserPicsService;
 import com.noxinfinity.pdating.graphql.types.*;
@@ -28,8 +29,8 @@ public class UserApp implements IUserApp {
 
     @Override
     public UserInfoSuccessResponse updateUserInfoById(String id, UpdateUserInfo body) throws Exception {
-        UserData userData = userDataService.updateUserDataById(id,body);
-        return new UserInfoSuccessResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(userData).build();
+        com.noxinfinity.pdating.Entities.UserData userData = userDataService.updateUserDataById(id,body);
+        return new UserInfoSuccessResponse.Builder().message("Success").status(StatusEnum.SUCCESS).data(BaseServices.mapUser(userData)).build();
     }
 
     @Override

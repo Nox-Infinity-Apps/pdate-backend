@@ -77,8 +77,29 @@ public class UserService implements IUser {
         return null;
     }
 
+    @Override
+    public DontCareUserResponse dontCareUser(String userId, String dontCareUserId) {
+        UserData user = userDataRepository.findById(userId).orElseThrow(() -> new RuntimeException("Internal"));
+        UserData dontCareUser = userDataRepository.findById(dontCareUserId).orElseThrow(() -> new RuntimeException("Internal"));
+        user.getDontCaredUsers().add(dontCareUser);
+        userDataRepository.save(user);
+        return DontCareUserResponse.newBuilder().message("Dont care about " + dontCareUser.getFullName()).status(StatusEnum.SUCCESS).build();
+    }
+
     public List<UserSuggest> getSuggestedUsersNearBy(String currentUserId, double currentLat, double currentLng, int offset) {
         return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsersNearBy(currentUserId, currentLat, currentLng, offset * 10));
 
+    }
+
+    public List<com.noxinfinity.pdating.graphql.types.UserData> getLikedUser(String userId){
+        UserData user = userDataRepository.findById(userId).orElseThrow(() -> new RuntimeException("Internal"));
+        List<com.noxinfinity.pdating.Entities.UserData> likedUsers = new ArrayList<>();
+        for(com.noxinfinity.pdating.Entities.UserLikes i : user.getLikesGiven()){
+            UserData userLike = userDataRepository.findById(i.getCurrentUserId()).orElse(null);
+            if (userLike != null) {
+                likedUsers.add(userLike);
+            }
+        }
+        return BaseServices.mapUsers(likedUsers);
     }
 }

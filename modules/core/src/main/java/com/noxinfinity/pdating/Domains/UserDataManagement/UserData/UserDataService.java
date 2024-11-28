@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -140,70 +139,104 @@ public class UserDataService implements IUserDataService {
     }
 
     @Override
-    public com.noxinfinity.pdating.graphql.types.UserData updateUserDataById(String id, UpdateUserInfo body) throws Exception {
-        com.noxinfinity.pdating.graphql.types.UserData userData = new com.noxinfinity.pdating.graphql.types.UserData();
+    public UserData updateUserDataById(String id, UpdateUserInfo body) throws Exception {
+        // Check if `id` or `body` is null
+        if (id == null || body == null) {
+            throw new Exception("Invalid input: ID or request body is null.");
+        }
+
+        // Find the user by ID
         UserData user = _user.findById(id).orElse(null);
         if (user == null) {
             throw new Exception("Không tồn tại user");
-        } else {
-            // Cập nhật thông tin cơ bản
-            user.setAvatarUrl(body.getAvatar());
-            user.setBio(body.getBio());
-            user.setDob(new SimpleDateFormat("dd/MM/yyyy").parse(body.getDob()));
-            user.setFullName(body.getFullName());
-            if(body.getGrade() != null) user.setGrade(_grade.findById(Long.valueOf(body.getGrade())).orElse(null));
-            if(body.getMajor() != null) user.setMajor(_major.findById(Long.valueOf(body.getMajor())).orElse(null));
-
-            // Cập nhật Auth
-            Auth auth = user.getAuth();
-            auth.setFcmNotificationToken(body.getFcmNotificationToken());
-            auth.setEmail(body.getEmail());
-            auth.setProvider(AuthProvider.valueOf(body.getProvider().toUpperCase()));
-            _auth.save(auth);
-
-            if(body.getLocation() != null){
-                // Cập nhật Location
-                UserLocation location = user.getLocation();
-                if (location == null) {
-                    location = new UserLocation();
-                }
-                location.setLat(body.getLocation().getLat());
-                location.setLng(body.getLocation().getLng());
-                location.setUserData(user);
-                user.setLocation(location);
-            }
-
-            if(body.getHobbies() != null){
-                // Cập nhật Hobbies
-                List<Long> hobbyIds = body.getHobbies().stream()
-                        .map(Integer::longValue)
-                        .toList();; // Danh sách id từ body
-                List<Hobbies> hobbiesFromDb = _hobbies.findAllById(hobbyIds); // Lấy danh sách hobbies từ DB
-                if (hobbiesFromDb.size() != hobbyIds.size()) {
-                    throw new Exception("Sở thích không tồn tại trong danh sách.");
-                }
-
-                // Xóa các hobbies cũ
-                List<UserHobbies> currentHobbies = user.getHobbies();
-                currentHobbies.clear();
-
-                // Thêm hobbies mới
-                for (Hobbies hobby : hobbiesFromDb) {
-                    UserHobbies userHobby = new UserHobbies();
-                    userHobby.setUserData(user);
-                    userHobby.setHobbies(hobby);
-                    currentHobbies.add(userHobby);
-                }
-
-                user.setHobbies(currentHobbies);
-            }
-            user.setIsActivated(1);
-            user.setGender(body.getGender() != null ? com.noxinfinity.pdating.Entities.Enums.Gender.fromValue(body.getGender().toString()) : com.noxinfinity.pdating.Entities.Enums.Gender.OTHER);
-            user.setUpdatedAt(new java.util.Date());
-            // Lưu UserData
-            _user.save(user);
-            return null;
         }
+
+        // Update basic information with null checks
+        if (body.getAvatar() != null) {
+            user.setAvatarUrl(body.getAvatar());
+        }
+        if (body.getBio() != null) {
+            user.setBio(body.getBio());
+        }
+        if (body.getDob() != null) {
+            user.setDob(new SimpleDateFormat("dd/MM/yyyy").parse(body.getDob()));
+        }
+        if (body.getFullName() != null) {
+            user.setFullName(body.getFullName());
+        }
+        if (body.getGrade() != null) {
+            user.setGrade(_grade.findById(Long.valueOf(body.getGrade())).orElse(null));
+        }
+        if (body.getMajor() != null) {
+            user.setMajor(_major.findById(Long.valueOf(body.getMajor())).orElse(null));
+        }
+
+        // Update auth details with null checks
+        Auth auth = user.getAuth();
+        if (auth != null) {
+            if (body.getFcmNotificationToken() != null) {
+                auth.setFcmNotificationToken(body.getFcmNotificationToken());
+            }
+            if (body.getEmail() != null) {
+                auth.setEmail(body.getEmail());
+            }
+            if (body.getProvider() != null) {
+                auth.setProvider(AuthProvider.valueOf(body.getProvider().toUpperCase()));
+            }
+            _auth.save(auth);
+        }
+
+        // Update location with null checks
+        if (body.getLocation() != null) {
+            UserLocation location = user.getLocation();
+            if (location == null) {
+                location = new UserLocation();
+            }
+            if (body.getLocation().getLat() != null) {
+                location.setLat(body.getLocation().getLat());
+            }
+            if (body.getLocation().getLng() != null) {
+                location.setLng(body.getLocation().getLng());
+            }
+            location.setUserData(user);
+            user.setLocation(location);
+        }
+
+        // Update hobbies with null checks
+        if (body.getHobbies() != null) {
+            List<Long> hobbyIds = body.getHobbies().stream()
+                    .map(Integer::longValue)
+                    .toList(); // List of IDs from body
+            List<Hobbies> hobbiesFromDb = _hobbies.findAllById(hobbyIds);
+            if (hobbiesFromDb.size() != hobbyIds.size()) {
+                throw new Exception("Sở thích không tồn tại trong danh sách.");
+            }
+
+            // Clear current hobbies and add new ones
+            List<UserHobbies> currentHobbies = user.getHobbies();
+            currentHobbies.clear();
+
+            for (Hobbies hobby : hobbiesFromDb) {
+                UserHobbies userHobby = new UserHobbies();
+                userHobby.setUserData(user);
+                userHobby.setHobbies(hobby);
+                currentHobbies.add(userHobby);
+            }
+
+            user.setHobbies(currentHobbies);
+        }
+
+        // Update other fields with null checks
+        user.setIsActivated(1); // Assuming activation is mandatory
+        user.setGender(body.getGender() != null ?
+                com.noxinfinity.pdating.Entities.Enums.Gender.fromValue(body.getGender().toString()) :
+                com.noxinfinity.pdating.Entities.Enums.Gender.OTHER);
+        user.setUpdatedAt(new java.util.Date());
+
+        // Save updated user data
+        _user.save(user);
+
+        return user;
     }
 
     @Override

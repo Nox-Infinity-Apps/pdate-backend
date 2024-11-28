@@ -56,7 +56,8 @@ public class MatchServices implements IMatch{
             userLikeRepository.save(userLike);
             LikeUserResponse.Builder response = LikeUserResponse.newBuilder().isMatched(isMutualLike ? 1 : 0).message("success").status(StatusEnum.SUCCESS);
             if (isMutualLike) {
-                response.conversationId(this.match(currentUser, targetUser).getId());
+                Conversations conversations = match(currentUser, targetUser);
+                response.conversationId(conversations.getId());
             }
             return response.build();
         } catch (Exception e) {
