@@ -56,7 +56,8 @@ public class MatchServices implements IMatch{
             userLikeRepository.save(userLike);
             LikeUserResponse.Builder response = LikeUserResponse.newBuilder().isMatched(isMutualLike ? 1 : 0).message("success").status(StatusEnum.SUCCESS);
             if (isMutualLike) {
-                response.conversationId(this.match(currentUser, targetUser).getId());
+                Conversations conversations = match(currentUser, targetUser);
+                response.conversationId(conversations.getId());
             }
             return response.build();
         } catch (Exception e) {
@@ -102,8 +103,9 @@ public class MatchServices implements IMatch{
             ArrayList<String> usersInConversationList = new ArrayList<>();
             usersInConversationList.add(user1.getUserId());
             usersInConversationList.add(user2.getUserId());
+            conversationRepository.save(conversation);
             conversationService.createConversationForCouple(conversation.getId().toString(), usersInConversationList);
-            return conversationRepository.save(conversation);
+            return conversation;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
         }

@@ -5,6 +5,7 @@ extend type Query {
     suggestedUsersNearBy(currentLat: Float!, currentLng: Float!, offset: Int): [UserSuggest]
     blockedUsers: [UserData]
     getAllPurpose: GetAllPurposeResponse!
+    getLikedUser: [UserData]
 }
 
 
@@ -14,6 +15,7 @@ extend type Mutation {
     unblockUser(blockedUserId: String!): BlockUserResponse!
     updateFcmTokenAndLocation(input: UpdateFcmTokenAndLocation!): UserInfoSuccessResponse!
     updateUserPurpose(purposeIds: [Int]!): GetAllPurposeResponse!
+    dontCarekUser(dontCareUserId: String!): DontCareUserResponse
 }
 
 input UpdateUserInfo {
@@ -148,4 +150,9 @@ enum Gender {
     MALE,
     FEMALE,
     OTHER
+}
+
+type DontCareUserResponse implements ResponseBase{
+    status: StatusEnum!
+    message: String!
 }

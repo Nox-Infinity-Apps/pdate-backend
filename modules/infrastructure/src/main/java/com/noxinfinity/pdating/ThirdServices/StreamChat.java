@@ -33,7 +33,7 @@ public class StreamChat {
         for (String userId : userIdList) {
             memberList.add(
                     Channel.ChannelMemberRequestObject.builder()
-                            .user(User.UserRequestObject.builder().id(userId).build())
+                            .user(User.UserRequestObject.builder().id(userId).role("member").build())
                             .build()
             );
         }
