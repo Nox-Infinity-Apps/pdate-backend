@@ -75,10 +75,13 @@ public class UserPicsService implements IUserPicsService {
         if (userData == null) {
             throw new Exception("User not found");
         }
-        if(userData.getUserPics().size() >=12){
+        if(userData.getUserPics() != null &&  userData.getUserPics().size() >=12){
             throw new Exception("User can only upload 12 pictures");
         }
         CloudinaryUploadResult url = _uploadService.uploadImage(file);
+        if (url == null || url.getUrl() == null || url.getPublicId() == null) {
+            throw new Exception("Failed to upload new picture");
+        }
         UserPics userPics = new UserPics();
         userPics.setPublicId(url.getPublicId());
         userPics.setImageUrl(url.getUrl());
@@ -95,12 +98,22 @@ public class UserPicsService implements IUserPicsService {
         if (userData == null) {
             throw new Exception("User not found");
         }
+        if(picId == null || picId.isEmpty()){
+            throw new Exception("Picture id is required");
+        }
         UserPics userPics = userData.getUserPics().stream().filter(x -> x.getId().toString().equals(picId)).findFirst().orElse(null);
-        if (userPics == null) {
+        if (userPics == null || userPics.getPublicId() == null) {
             throw new Exception("Picture not found");
         }
         CloudinaryUploadResult url = _uploadService.uploadImage(file);
-        _uploadService.deleteImage(userPics.getPublicId());
+        boolean isDeleted = _uploadService.deleteImage(userPics.getPublicId());
+        if (!isDeleted) {
+            throw new Exception("Failed to delete old picture");
+        }
+
+        if (url == null || url.getUrl() == null || url.getPublicId() == null) {
+            throw new Exception("Failed to upload new picture");
+        }
         userPics.setPublicId(url.getPublicId());
         userPics.setImageUrl(url.getUrl());
         _userPicsRepository.save(userPics);
@@ -114,11 +127,17 @@ public class UserPicsService implements IUserPicsService {
         if (userData == null) {
             throw new Exception("User not found");
         }
+        if(picId == null || picId.isEmpty()){
+            throw new Exception("Picture id is required");
+        }
         UserPics userPics = userData.getUserPics().stream().filter(x -> x.getId().toString().equals(picId)).findFirst().orElse(null);
-        if (userPics == null) {
+        if (userPics == null || userPics.getPublicId() == null) {
             throw new Exception("Picture not found");
         }
-        _uploadService.deleteImage(userPics.getPublicId());
+        boolean isDeleted = _uploadService.deleteImage(userPics.getPublicId());
+        if (!isDeleted) {
+            throw new Exception("Failed to delete old picture");
+        }
         userData.getUserPics().remove(userPics);
         _user.save(userData);
         return "Delete picture success";
