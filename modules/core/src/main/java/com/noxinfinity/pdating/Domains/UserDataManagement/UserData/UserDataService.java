@@ -132,6 +132,16 @@ public class UserDataService implements IUserDataService {
             userData.setIsActivated(user.getIsActivated() != null ? user.getIsActivated() : 0);
             userData.setIsVerified(false);
             userData.setGender(user.getGender() != null ? Gender.valueOf(user.getGender().toValue()) : Gender.OTHER);
+
+            // Picture
+            userData.setPictures(user.getUserPics() != null ?
+                    user.getUserPics().stream()
+                            .map(picture -> new Pics.Builder()
+                                    .id(picture.getId() != null ? Math.toIntExact(picture.getId()) : null)
+                                    .url(picture.getImageUrl() != null ? picture.getImageUrl() : "")
+                                    .build())
+                            .collect(Collectors.toList())
+                    : null);
             return userData;
         } else {
             return null;
