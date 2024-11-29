@@ -154,7 +154,8 @@ public class BaseServices {
             } else {
                 user.setPictures(new ArrayList<>());
             }
-
+            user.setLat(Double.parseDouble((String) result[16]));
+            user.setLng(Double.parseDouble((String) result[17]));
             suggestedUsers.add(user);
         }
         return suggestedUsers;

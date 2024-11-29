@@ -17,6 +17,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
+            "       ul.lat, ul.lng " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
             "LEFT JOIN grades g ON u.grade_id = g.id " +
@@ -50,6 +51,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
+            "       ul.lat, ul.lng " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
             "LEFT JOIN grades g ON u.grade_id = g.id " +
@@ -87,6 +89,7 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
             "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
+            "       ul.lat, ul.lng " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
             "LEFT JOIN grades g ON u.grade_id = g.id " +
@@ -122,7 +125,8 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "       GROUP_CONCAT(DISTINCT CASE WHEN uh.hobby_id IN (SELECT hobby_id FROM user_hobbies WHERE fcm_id = :currentUserId) THEN CONCAT(h.id, ':', h.title, ':', h.icon_url) END SEPARATOR '|') AS common_hobbies, " +
             "       GROUP_CONCAT(DISTINCT CONCAT(h.id, ':', h.title, ':', h.icon_url) SEPARATOR '|') AS all_hobbies, " +
             "       GROUP_CONCAT(DISTINCT p.title SEPARATOR '|') AS purposes, " +
-            "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics " +
+            "       GROUP_CONCAT(DISTINCT upic.image_url SEPARATOR '|') AS user_pics, " +
+            "       ul.lat, ul.lng " +
             "FROM user_data u " +
             "JOIN user_location ul ON u.fcm_id = ul.fcm_id " +
             "LEFT JOIN grades g ON u.grade_id = g.id " +

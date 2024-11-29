@@ -107,6 +107,8 @@ type UserSuggest {
     allHobbies: [Hobbie]
     purpose: [String]
     pictures: [String]
+    lat: Float
+    lng: Float
 }
 
 type Grade {
