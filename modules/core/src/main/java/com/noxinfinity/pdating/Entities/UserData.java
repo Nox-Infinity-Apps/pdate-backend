@@ -49,7 +49,7 @@ public class UserData {
     @Column(name = "gender", columnDefinition = "ENUM('FEMALE', 'MALE', 'OTHER') DEFAULT 'OTHER'")
     private Gender gender;
 
-    @Column(name = "is_activated", columnDefinition = "DEFAULT 0")
+    @Column(name = "is_activated", columnDefinition = "DEFAULT 1")
     private Integer isActivated;
 
     @Column(name = "updated_at")
@@ -58,7 +58,7 @@ public class UserData {
     @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "is_verified", columnDefinition = "DEFAULT false")
+    @Column(name = "is_verified", columnDefinition = "DEFAULT true")
     private boolean isVerified;
 
     @OneToOne
