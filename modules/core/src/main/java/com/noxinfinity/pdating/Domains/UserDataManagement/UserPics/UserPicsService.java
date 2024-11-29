@@ -27,18 +27,27 @@ public class UserPicsService implements IUserPicsService {
         this._userPicsRepository = userPicsRespository;
     }
 
-    @Override
     public String uploadAvatar(String id, MultipartFile file) throws Exception {
         UserData userData = _user.findById(id).orElse(null);
         if (userData == null) {
             throw new Exception("User not found");
         }
-        //Xóa ava cũ
-        if (!userData.getPublicAvataId().isEmpty()) {
-            _uploadService.deleteImage(userData.getPublicAvataId());
+
+        // Xóa avatar cũ
+        if (userData.getPublicAvataId() != null && !userData.getPublicAvataId().isEmpty()) {
+            boolean isDeleted = _uploadService.deleteImage(userData.getPublicAvataId());
+            if (!isDeleted) {
+                throw new Exception("Failed to delete old avatar");
+            }
         }
 
+        // Upload avatar mới
         CloudinaryUploadResult url = _uploadService.uploadImage(file);
+        if (url == null || url.getUrl() == null || url.getPublicId() == null) {
+            throw new Exception("Failed to upload new avatar");
+        }
+
+        // Cập nhật thông tin người dùng
         userData.setAvatarUrl(url.getUrl());
         userData.setPublicAvataId(url.getPublicId());
         _user.save(userData);
@@ -51,7 +60,7 @@ public class UserPicsService implements IUserPicsService {
         if (userData == null) {
             throw new Exception("User not found");
         }
-        if (!userData.getPublicAvataId().isEmpty()) {
+        if (userData.getPublicAvataId() != null && !userData.getPublicAvataId().isEmpty()) {
             _uploadService.deleteImage(userData.getPublicAvataId());
         }
         userData.setAvatarUrl("");

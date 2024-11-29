@@ -2,7 +2,6 @@ package com.noxinfinity.pdating.Domains.UploadManagement;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.noxinfinity.pdating.graphql.types.CloudinaryUploadResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,16 +26,18 @@ public class UploadService implements IUploadService {
                             "resource_type", "auto",
                             "folder", "P_Date"
                     ));
+
             CloudinaryUploadResult result = new CloudinaryUploadResult();
-            result.setUrl(uploadResult.get("url").toString());
-            result.setSecureUrl(uploadResult.get("secure_url").toString());
-            result.setPublicId(uploadResult.get("public_id").toString());
-            result.setResourceType(uploadResult.get("resource_type").toString());
-            result.setCreatedAt(uploadResult.get("created_at").toString());
-            result.setFolder(uploadResult.get("folder").toString());
-            result.setType(uploadResult.get("type").toString());
-            result.setOriginalFilename(uploadResult.get("original_filename").toString());
-            result.setSignature(uploadResult.get("signature").toString());
+            result.setUrl(uploadResult.get("url") != null ? uploadResult.get("url").toString() : null);
+            result.setSecureUrl(uploadResult.get("secure_url") != null ? uploadResult.get("secure_url").toString() : null);
+            result.setPublicId(uploadResult.get("public_id") != null ? uploadResult.get("public_id").toString() : null);
+            result.setResourceType(uploadResult.get("resource_type") != null ? uploadResult.get("resource_type").toString() : null);
+            result.setCreatedAt(uploadResult.get("created_at") != null ? uploadResult.get("created_at").toString() : null);
+            result.setFolder(uploadResult.get("folder") != null ? uploadResult.get("folder").toString() : null);
+            result.setType(uploadResult.get("type") != null ? uploadResult.get("type").toString() : null);
+            result.setOriginalFilename(uploadResult.get("original_filename") != null ? uploadResult.get("original_filename").toString() : null);
+            result.setSignature(uploadResult.get("signature") != null ? uploadResult.get("signature").toString() : null);
+
             return result;
         } catch (IOException e) {
             throw new IOException("Failed to upload image to Cloudinary", e);
@@ -46,7 +47,8 @@ public class UploadService implements IUploadService {
     public boolean deleteImage(String publicId) throws IOException {
         try {
             Map<?, ?> deleteResult = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-            return "ok".equals(deleteResult.get("result"));
+            Object result = deleteResult.get("result");
+            return result != null && "ok".equals(result.toString());
         } catch (IOException e) {
             throw new IOException("Failed to delete image from Cloudinary", e);
         }

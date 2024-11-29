@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MatchServices implements IMatch{
@@ -68,11 +67,11 @@ public class MatchServices implements IMatch{
     @Override
     public UnLikeUserResponse unlike(String current, String target) {
         try {
-            Optional<UserLikes> userLikes = userLikeRepository.findByCurrentUserIdAndTargetUserId(
+            UserLikes userLikes = userLikeRepository.findByCurrentUserIdAndTargetUserId(
                     current, target
-            );
-            if (userLikes.isPresent()) {
-                userLikeRepository.delete(userLikes.get());
+            ).orElse(null);
+            if (userLikes!=null) {
+                userLikeRepository.delete(userLikes);
                 return UnLikeUserResponse.newBuilder().message("success").status(StatusEnum.SUCCESS).build();
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
