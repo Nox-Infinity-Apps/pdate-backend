@@ -4,16 +4,13 @@ import com.noxinfinity.pdating.Applications.Base.BaseServices;
 import com.noxinfinity.pdating.Domains.CategoryManagement.CategoryRepository;
 import com.noxinfinity.pdating.Domains.UserManagement.UserDataRepository;
 import com.noxinfinity.pdating.Entities.Enums.Category;
-import com.noxinfinity.pdating.Entities.Hobbies;
 import com.noxinfinity.pdating.Entities.UserData;
 import com.noxinfinity.pdating.graphql.types.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUser {
@@ -25,11 +22,12 @@ public class UserService implements IUser {
         this.userDataRepository = userDataRepository;
         this.categoryRepository = categoryRepository;
     }
-
+    @Override
     public List<UserSuggest> getSuggestedUsers(String currentUserId, double currentLat, double currentLng, int offset) {
         return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsers(currentUserId, currentLat, currentLng, offset * 10));
 
     }
+    @Override
     public BlockUserResponse blockUser(String currentUserId, String blockedUserId) {
         UserData blocker = userDataRepository.findById(currentUserId)
                 .orElseThrow(() ->  new RuntimeException("Internal"));
@@ -41,7 +39,7 @@ public class UserService implements IUser {
         userDataRepository.save(blocker);
         return BlockUserResponse.newBuilder().message("User blocked").status(StatusEnum.SUCCESS).build();
     }
-
+    @Override
     public BlockUserResponse unblockUser(String currentUserId, String blockedUserId) {
         UserData blocker = userDataRepository.findById(currentUserId)
                 .orElseThrow(() ->  new RuntimeException("Internal"));
@@ -53,7 +51,7 @@ public class UserService implements IUser {
         userDataRepository.save(blocker);
         return BlockUserResponse.newBuilder().message("User unblocked").status(StatusEnum.SUCCESS).build();
     }
-
+    @Override
     public List<com.noxinfinity.pdating.graphql.types.UserData> listBlockedUsers(String currentUserId) {
         UserData blocker = userDataRepository.findById(currentUserId).orElseThrow(() -> new RuntimeException("Internal"));
         List<com.noxinfinity.pdating.graphql.types.UserData> blockedUsers = new ArrayList<>();
@@ -85,12 +83,12 @@ public class UserService implements IUser {
         userDataRepository.save(user);
         return DontCareUserResponse.newBuilder().message("Dont care about " + dontCareUser.getFullName()).status(StatusEnum.SUCCESS).build();
     }
-
+    @Override
     public List<UserSuggest> getSuggestedUsersNearBy(String currentUserId, double currentLat, double currentLng, int offset) {
         return BaseServices.mapUserSuggest(userDataRepository.findSuggestedUsersNearBy(currentUserId, currentLat, currentLng, offset * 10));
 
     }
-
+    @Override
     public List<com.noxinfinity.pdating.graphql.types.UserData> getLikedUser(String userId){
         UserData user = userDataRepository.findById(userId).orElseThrow(() -> new RuntimeException("Internal"));
         List<com.noxinfinity.pdating.Entities.UserData> likedUsers = new ArrayList<>();

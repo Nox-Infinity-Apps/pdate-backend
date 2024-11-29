@@ -134,12 +134,12 @@ public interface UserDataRepository extends JpaRepository<UserData, String> {
             "LEFT JOIN user_pics upic ON u.fcm_id = upic.fcm_id " +
             "WHERE u.fcm_id != :currentUserId " +
             "   AND u.is_activated = 1 " +
-            "  AND NOT EXISTS (SELECT 1 FROM user_likes ul " +
+            "   AND NOT EXISTS (SELECT 1 FROM user_likes ul " +
             "                  WHERE ul.current_user_id = :currentUserId AND ul.target_user_id = u.fcm_id) " +
-            "  AND NOT EXISTS (SELECT 1 FROM user_dont_cared udc " +
+            "   AND NOT EXISTS (SELECT 1 FROM user_dont_cared udc " +
             "                  WHERE udc.user_id = :currentUserId AND udc.dont_care_user_id = u.fcm_id) " +
-            "   AND distance < 50000 " +
             "GROUP BY u.fcm_id, ul.lat, ul.lng, g.name, m.name, m.icon_url " +
+            "HAVING distance < 50000 " +
             "ORDER BY " +
             "   distance " +
             "LIMIT 10 OFFSET :offset", nativeQuery = true)
