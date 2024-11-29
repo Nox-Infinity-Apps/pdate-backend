@@ -5,6 +5,7 @@ import com.noxinfinity.pdating.Domains.AuthManagement.JWT.IJwtService;
 import com.noxinfinity.pdating.Domains.MailManagement.EmailService;
 import com.noxinfinity.pdating.Domains.UserDataManagement.UserData.IUserDataService;
 import com.noxinfinity.pdating.graphql.types.LoginWithGoogle;
+import com.noxinfinity.pdating.graphql.types.UserData;
 import com.noxinfinity.pdating.graphql.types.UserFromGoogle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,11 @@ public class AuthServices implements IAuth{
                 //Tao token
                 String accessToken = jwtService.generateToken(user);
                 Boolean isNew = userDataService.createOrUpdateUserDataFromGoogleReturnIsNew(user);
+                UserData userData = userDataService.getUserDataById(user.getFcm_id());
+                if(userData == null){
+                    throw new Exception("User not found");
+                }
+                user.setAvatar(userData.getAvatar());
                 if(isNew){
                     emailService.sendEmail(user.getEmail(), "Welcome to PDATE", EmailService.readHtmlFile("modules/adapters/src/main/resources/templates/send_mail_template.html"));
                 }
