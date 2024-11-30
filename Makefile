@@ -18,8 +18,19 @@ help:
 	@echo "  stop          Stop the running Spring Boot application."
 	@echo "  help          Display this help message."
 
-build:
-	@./gradlew build
+build: generateJava cleanBuild bootJar
+
+generateJava:
+	@echo "Running generateJava task..."
+	@./gradlew generateJava
+
+cleanBuild:
+	@echo "Cleaning generated sources..."
+	@rm -rf build/generated/sources/dgs-codegen-generated-examples
+
+bootJar:
+	@echo "Building the Spring Boot application as a JAR..."
+	@./gradlew bootJar
 
 run:
 	@./gradlew :modules:app:bootRun
@@ -29,9 +40,6 @@ clean:
 
 test:
 	@./gradlew test
-
-bootJar:
-	@./gradlew bootJar
 
 docker-build:
 	@docker build -t $(APP_NAME):latest .
