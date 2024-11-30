@@ -31,7 +31,7 @@ public class AuthServices implements IAuth{
                 String accessToken = jwtService.generateToken(user);
                 Boolean isNew = userDataService.createOrUpdateUserDataFromGoogleReturnIsNew(user);
                 UserData userData = userDataService.getUserDataById(user.getFcm_id());
-                if(userData != null){
+                if(userData != null && user.getAvatar() != null){
                     user.setAvatar(userData.getAvatar());
                 }
                 if(isNew){
