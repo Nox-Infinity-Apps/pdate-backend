@@ -31,12 +31,12 @@ public class AuthServices implements IAuth{
                 String accessToken = jwtService.generateToken(user);
                 Boolean isNew = userDataService.createOrUpdateUserDataFromGoogleReturnIsNew(user);
                 UserData userData = userDataService.getUserDataById(user.getFcm_id());
-                if(userData != null){
+                if(userData != null && userData.getAvatar() != null){
                     user.setAvatar(userData.getAvatar());
                 }
-                if(isNew){
-                    emailService.sendEmail(user.getEmail(), "Welcome to PDATE", EmailService.readHtmlFile("modules/adapters/src/main/resources/templates/send_mail_template.html"));
-                }
+//                if(isNew){
+//                    emailService.sendEmail(user.getEmail(), "Welcome to PDATE", EmailService.readHtmlFile("modules/adapters/src/main/resources/templates/send_mail_template.html"));
+//                }
                 return new LoginWithGoogle.Builder().user(user).accessToken(accessToken).isNew(isNew).build();
             }
            throw new Exception("Access token is not valid");
