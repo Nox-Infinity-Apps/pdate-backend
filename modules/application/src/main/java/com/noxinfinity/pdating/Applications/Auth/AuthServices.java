@@ -31,10 +31,9 @@ public class AuthServices implements IAuth{
                 String accessToken = jwtService.generateToken(user);
                 Boolean isNew = userDataService.createOrUpdateUserDataFromGoogleReturnIsNew(user);
                 UserData userData = userDataService.getUserDataById(user.getFcm_id());
-                if(userData == null){
-                    throw new Exception("User not found");
+                if(userData != null){
+                    user.setAvatar(userData.getAvatar());
                 }
-                user.setAvatar(userData.getAvatar());
                 if(isNew){
                     emailService.sendEmail(user.getEmail(), "Welcome to PDATE", EmailService.readHtmlFile("modules/adapters/src/main/resources/templates/send_mail_template.html"));
                 }
